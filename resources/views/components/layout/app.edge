@@ -1,0 +1,138 @@
+<!--
+Product: Metronic is a toolkit of UI components built with Tailwind CSS for developing scalable web applications quickly and efficiently
+Version: v9.2.4
+Author: Keenthemes
+Contact: support@keenthemes.com
+Website: https://www.keenthemes.com
+Support: https://devs.keenthemes.com
+Follow: https://www.twitter.com/keenthemes
+License: https://keenthemes.com/metronic/tailwind/docs/getting-started/license
+-->
+<!DOCTYPE html>
+<html class="h-full" data-kt-theme="true" data-kt-theme-mode="light" dir="ltr" lang="en">
+
+<head>
+    <base href="../../">
+    <title>
+        Smartsam - Universitas Samudra
+    </title>
+    <link href="assets/media/app/favicon.ico" rel="shortcut icon" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="assets/vendors/apexcharts/apexcharts.css" rel="stylesheet" />
+    <link href="assets/vendors/keenicons/styles.bundle.css" rel="stylesheet" />
+    <link href="assets/css/styles.css" rel="stylesheet" />
+</head>
+
+<body
+    class="antialiased flex h-full text-base text-foreground bg-background [--header-height:60px] [--sidebar-width:270px] lg:overflow-hidden bg-muted">
+    <!-- Theme Mode -->
+    <script>
+        const defaultThemeMode = 'light'; // light|dark|system
+        let themeMode;
+
+        if (document.documentElement) {
+            if (localStorage.getItem('kt-theme')) {
+                themeMode = localStorage.getItem('kt-theme');
+            } else if (
+                document.documentElement.hasAttribute('data-kt-theme-mode')
+            ) {
+                themeMode =
+                    document.documentElement.getAttribute('data-kt-theme-mode');
+            } else {
+                themeMode = defaultThemeMode;
+            }
+
+            if (themeMode === 'system') {
+                themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+                    ? 'dark'
+                    : 'light';
+            }
+
+            document.documentElement.classList.add(themeMode);
+        }
+    </script>
+    <!-- End of Theme Mode -->
+    <!-- Page -->
+    <!-- Base -->
+    <div class="flex grow">
+        <!-- Header -->
+        <header class="flex lg:hidden items-center fixed z-10 top-0 start-0 end-0 shrink-0 bg-muted h-(--header-height)"
+            id="header">
+            <!-- Container -->
+            <div class="kt-container-fixed flex items-center justify-between flex-wrap gap-3">
+                <a href="html/demo6.html">
+                    <img class="dark:hidden min-h-[30px]" src="assets/media/app/mini-logo-gray.svg" />
+                    <img class="hidden dark:block min-h-[30px]" src="assets/media/app/mini-logo-gray-dark.svg" />
+                </a>
+                <button class="kt-btn kt-btn-icon kt-btn-ghost -me-2" data-kt-drawer-toggle="#sidebar">
+                    <i class="ki-filled ki-menu">
+                    </i>
+                </button>
+            </div>
+            <!-- End of Container -->
+        </header>
+        <!-- End of Header -->
+        <!-- Sidebar -->
+        @!partials.sidebar()
+        <!-- End of Sidebar -->
+        <!-- Wrapper -->
+        <div class="flex flex-col lg:flex-row grow pt-(--header-height) lg:pt-0">
+            <!-- Main -->
+            <div
+                class="flex flex-col grow items-stretch rounded-xl bg-background border border-input lg:ms-(--sidebar-width) mt-0 lg:mt-[15px] m-[15px]">
+                <div class="flex flex-col grow kt-scrollable-y-auto [--kt-scrollbar-width:auto] pt-5"
+                    id="scrollable_content">
+                    {{{ await $slots.main() }}}
+                    <!-- Footer -->
+                    @!partials.footer()
+                    <!-- End of Footer -->
+                </div>
+            </div>
+            <!-- End of Main -->
+        </div>
+        <!-- End of Wrapper -->
+    </div>
+    <!-- End of Base -->
+    <!-- End of Page -->
+    <!-- Scripts -->
+    <script src="assets/js/core.bundle.js">
+    </script>
+    <script src="assets/vendors/ktui/ktui.min.js">
+    </script>
+    <script src="assets/vendors/apexcharts/apexcharts.min.js">
+    </script>
+    <script src="assets/js/widgets/general.js">
+    </script>
+    <script>
+        const menu = document.querySelectorAll('.kt-menu-item');
+
+        menu.forEach((menuItem) => {
+            if (menuItem.hasAttribute('data-kt-menu-item-toggle') && menuItem.getAttribute('data-kt-menu-item-toggle') === 'accordion') {
+                return;
+            }
+            const anchor = menuItem.querySelector('a');
+            if (anchor.href === window.location.href) {
+                menuItem.classList.add('active');
+            }
+        })
+
+        const accordions = document.querySelectorAll('[data-kt-menu-item-toggle="accordion"]');
+
+        accordions.forEach((accordion) => {
+            const listMenu = accordion.querySelector(".kt-menu-accordion");
+            const sidebarMenuItems = listMenu.querySelectorAll(".kt-menu-item");
+
+            sidebarMenuItems.forEach((menuItem) => {
+                const anchor = menuItem.querySelector("a");
+                if (anchor.href === window.location.href) {
+                    accordion.classList.add("show");
+                    menuItem.classList.add("active");
+                }
+            });
+        })
+
+    </script>
+    <!-- End of Scripts -->
+</body>
+
+</html>
