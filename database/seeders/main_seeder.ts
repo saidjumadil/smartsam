@@ -13,7 +13,7 @@ export default class extends BaseSeeder {
     // Write your database queries inside the run method
     // Roles
     console.log("Mulai Membuat Data Roles")
-    await Role.createMany([
+    const role = await Role.createMany([
       {
         "nama": "Super Admin"
       },
@@ -49,6 +49,25 @@ export default class extends BaseSeeder {
       ]
     )
 
+    // Jabatans
+    console.log("Mulai Membuat Data Jabatans")
+    const pimpinan = unit.map((item) => {
+      return {
+        nama: 'Kepala ' + item.nama,
+        unit: item.id,
+        role: role[2].id
+      }
+    })
+    const admin_surat = unit.map((item) => {
+      return {
+        nama: 'Admin Surat ' + item.nama,
+        unit: item.id,
+        role: role[3].id
+      }
+    })
+    const penugasan = pimpinan.concat(admin_surat)
+    await Jabatan.createMany(penugasan)
+
     // Status Surat
     console.log("Mulai Membuat Data Status Surat")
     await StatusSurat.createMany([
@@ -56,7 +75,8 @@ export default class extends BaseSeeder {
       { status: "Surat Diterima Admin" },
       { status: "Disposisi Surat" },
       { status: "Surat Diterima Pimpinan" },
-      { status: "Surat Disetujui" }
+      { status: "Surat Disetujui" },
+      { status: "Surat Ditolak" }
     ])
 
     // Jenis Surat
