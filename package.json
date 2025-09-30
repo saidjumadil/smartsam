@@ -59,8 +59,10 @@
     "@adonisjs/static": "^1.1.1",
     "@adonisjs/vite": "^4.0.0",
     "@vinejs/vine": "^3.0.1",
+    "axios": "^1.12.2",
     "edge.js": "^6.2.1",
     "luxon": "^3.7.1",
+    "openid-client": "^5.7.1",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "uuid": "^11.1.0"

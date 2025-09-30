@@ -1,0 +1,338 @@
+@layout.app()
+@slot('main')
+<main class="grow" role="content">
+    <!-- Toolbar -->
+    <div class="pb-5">
+        <!-- Container -->
+        <div class="kt-container-fixed flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center flex-wrap gap-1 lg:gap-5">
+                <h1 class="font-medium text-lg text-mono">
+                    Manajemen Anggota Unit {{unit.nama}}
+                </h1>
+            </div>
+            <div class="flex items-center flex-wrap gap-1.5 lg:gap-3.5">
+            </div>
+        </div>
+        <!-- End of Container -->
+    </div>
+    <!-- End of Toolbar -->
+
+    <!-- Container -->
+    <div class="kt-container-fixed">
+        <div class="grid grid-cols-8 gap-4">
+            {{-- Detail Surat --}}
+            <div class="col-span-6 flex flex-col gap-4">
+                <div class="kt-card kt-card-grid">
+                    <div class="kt-card-header flex-wrap gap-2">
+                        <h3 class="kt-card-title text-sm">
+                            List Anggota
+                        </h3>
+                        <div class="flex flex-wrap gap-2 lg:gap-5">
+                            <div class="flex">
+                                <label class="kt-input">
+                                    <i class="ki-filled ki-magnifier">
+                                    </i>
+                                    <input data-kt-datatable-search="#team_crew_table" placeholder="Search users"
+                                        type="text" value="" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kt-card-content">
+                        <div data-kt-datatable="true" data-kt-datatable-state-save="false" id="team_crew_table">
+                            <div class="kt-scrollable-x-auto">
+                                <table class="kt-table table-auto kt-table-border" data-kt-datatable-table="true">
+                                    <thead>
+                                        <tr>
+                                            <th class="w-[60px] text-center">
+                                                <span class="kt-table-col">
+                                                    <span class="kt-table-col-label">
+                                                        No.
+                                                    </span>
+                                                    <span class="kt-table-col-sort">
+                                                    </span>
+                                                </span>
+                                            </th>
+                                            <th class="">
+                                                <span class="kt-table-col">
+                                                    <span class="kt-table-col-label">
+                                                        NIP
+                                                    </span>
+                                                    <span class="kt-table-col-sort">
+                                                    </span>
+                                                </span>
+                                            </th>
+                                            <th class="">
+                                                <span class="kt-table-col">
+                                                    <span class="kt-table-col-label">
+                                                        Nama
+                                                    </span>
+                                                    <span class="kt-table-col-sort">
+                                                    </span>
+                                                </span>
+                                            </th>
+                                            <th class="">
+                                                <span class="kt-table-col">
+                                                    <span class="kt-table-col-label">
+                                                        Jabatan
+                                                    </span>
+                                                    <span class="kt-table-col-sort">
+                                                    </span>
+                                                </span>
+                                            </th>
+                                            <th class="">
+                                                <span class="kt-table-col">
+                                                    <span class="kt-table-col-label">
+                                                        Status
+                                                    </span>
+                                                    <span class="kt-table-col-sort">
+                                                    </span>
+                                                </span>
+                                            </th>
+                                            <th class="min-w-[180px]">
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @each(i in unit.jabatans)
+                                        @each(( item, index ) in i.penugasans)
+                                        <tr>
+                                            <td class="text-center">
+                                                {{index + 1}}
+                                            </td>
+                                            <td class="text-foreground font-normal">
+                                                {{item.pejabatRel.username}}
+                                            </td>
+                                            <td class="text-foreground font-normal">
+                                                {{item.pejabatRel.nama}}
+                                            </td>
+                                            <td class="text-foreground font-normal">
+                                                {{i.nama}}
+                                            </td>
+                                            <td class="text-foreground font-normal">
+                                                {{item.status}}
+                                            </td>
+                                            <td class="text-center">
+                                                @if(i.role == 5)
+                                                <div>
+                                                    <form
+                                                        action="{{route('admin.manajemenAnggota.hapus', {penugasan: item.id})}}"
+                                                        method="POST">
+                                                        {{ csrfField()}}
+                                                        <button type="submit" class="kt-btn kt-btn-destructive ">
+                                                            <i class="ki-filled ki-trash"></i>
+                                                            Hapus
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @end
+                                        @end
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div
+                                class="kt-card-footer justify-center md:justify-between flex-col md:flex-row gap-5 text-secondary-foreground text-sm font-medium">
+                                <div class="flex items-center gap-2 order-2 md:order-1">
+                                    Show
+                                    <select class="kt-select w-16" data-kt-datatable-size="true" data-kt-select=""
+                                        name="perpage">
+                                    </select>
+                                    per page
+                                </div>
+                                <div class="flex items-center gap-4 order-1 md:order-2">
+                                    <span data-kt-datatable-info="true">
+                                    </span>
+                                    <div class="kt-datatable-pagination" data-kt-datatable-pagination="true">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-2">
+                @let(role = session.get('user.penugasans[0].jabatan.role'))
+                <div class="flex flex-col gap-2 mb-4">
+                    <button class="kt-btn kt-btn-mono kt-btn-lg  kt-btn-outline" data-kt-modal-toggle="#ganti_pimpinan">
+                        <i class="ki-filled ki-plus"></i>
+                        Ganti Pimpinan
+                    </button>
+                    <button class="kt-btn kt-btn-mono kt-btn-lg " data-kt-modal-toggle="#ganti_admin">
+                        <i class="ki-filled ki-plus"></i>
+                        Ganti Admin
+                    </button>
+                    <button class="kt-btn kt-btn-lg" data-kt-modal-toggle="#tambah_anggota">
+                        <i class="ki-filled ki-plus"></i>
+                        Tambah Anggota
+                    </button>
+                    @if(role == 1)
+                    @elseif(role == 3)
+                    @else
+                    @endif
+                </div>
+                <div class="kt-modal" data-kt-modal="true" id="tambah_anggota">
+                    <div class="kt-modal-content pt-7.5 my-[3%] kt-container-fixed px-5 overflow-hidden"
+                        style="max-width: 700px;">
+                        <div class="kt-modal-header">
+                            <h3 class="kt-modal-title">Tambah Anggota Unit {{unit.nama}}</h3>
+                            <button type="button" class="kt-modal-close" aria-label="Close modal"
+                                data-kt-modal-dismiss="#tambah_anggota">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
+                                    <path d="M18 6 6 18"></path>
+                                    <path d="m6 6 12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <form action="{{route('admin.manajemenAnggota.post', {jabatan: jabatan[5]})}}" method="post">
+                            {{ csrfField() }}
+                            <div class="kt-modal-body grid gap-y-3">
+                                <div class="flex flex-row gap-2 mb-3">
+                                    <label for="" class="kt-label w-[100px]">Pilih Anggota</label>
+                                    <select class="kt-select" data-kt-select="true" data-kt-select-enable-search="true"
+                                        name="pejabat" data-kt-select-search-placeholder="Search..."
+                                        data-kt-select-placeholder="Pilih Anggota Baru"
+                                        data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'
+                                        required>
+                                        @each(item in users)
+                                        <option value="{{item.username}}">{{item.username}} - {{item.nama}}</option>
+                                        @end
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="kt-modal-footer">
+                                <div></div>
+                                <div class="flex gap-4">
+                                    <button class="kt-btn kt-btn-secondary" data-kt-modal-dismiss="#tambah_anggota">
+                                        Cancel</button><button class="kt-btn">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="kt-modal" data-kt-modal="true" id="ganti_pimpinan">
+                    <div class="kt-modal-content pt-7.5 my-[3%] kt-container-fixed px-5 overflow-hidden"
+                        style="max-width: 700px;">
+                        <div class="kt-modal-header">
+                            <h3 class="kt-modal-title">Ganti Pimpinan Unit {{unit.nama}}</h3>
+                            <button type="button" class="kt-modal-close" aria-label="Close modal"
+                                data-kt-modal-dismiss="#ganti_pimpinan">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
+                                    <path d="M18 6 6 18"></path>
+                                    <path d="m6 6 12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <form action="{{route('admin.manajemenAnggota.gantiPimpinan', {jabatan: jabatan[3]})}}"
+                            method="post">
+                            {{ csrfField() }}
+                            <div class="kt-modal-body grid gap-y-3">
+                                <div class="flex flex-row gap-2 mb-3">
+                                    <label for="" class="kt-label w-[100px]">Pilih Pimpinan</label>
+                                    <select class="kt-select" data-kt-select="true" data-kt-select-enable-search="true"
+                                        name="pejabat" data-kt-select-search-placeholder="Search..."
+                                        data-kt-select-placeholder="Pilih Pimpinan"
+                                        data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'
+                                        required>
+                                        @each(item in users)
+                                        <option value="{{item.username}}">{{item.username}} - {{item.nama}}</option>
+                                        @end
+                                    </select>
+                                </div>
+                                <div class="flex flex-row gap-2 mb-3">
+                                    <label for="" class="kt-label w-[100px]">Pilih Pimpinan</label>
+                                    <select class="kt-select" data-kt-select-placeholder="Pilih Pimpinan" name="status"
+                                        required>
+                                        <option value="aktif">Aktif</option>
+                                        <option value="plt">PLT</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="kt-modal-footer">
+                                <div></div>
+                                <div class="flex gap-4">
+                                    <button class="kt-btn kt-btn-secondary" data-kt-modal-dismiss="#ganti_pimpinan">
+                                        Cancel</button><button class="kt-btn">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="kt-modal" data-kt-modal="true" id="ganti_admin">
+                    <div class="kt-modal-content pt-7.5 my-[3%] kt-container-fixed px-5 overflow-hidden"
+                        style="max-width: 700px;">
+                        <div class="kt-modal-header">
+                            <h3 class="kt-modal-title">Ganti Admin Unit {{unit.nama}}</h3>
+                            <button type="button" class="kt-modal-close" aria-label="Close modal"
+                                data-kt-modal-dismiss="#ganti_admin">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
+                                    <path d="M18 6 6 18"></path>
+                                    <path d="m6 6 12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <form action="{{route('admin.manajemenAnggota.gantiAdmin', {jabatan: jabatan[4]})}}"
+                            method="post">
+                            {{ csrfField() }}
+                            <div class="kt-modal-body grid gap-y-3">
+                                <div class="flex flex-row gap-2 mb-3">
+                                    <input type="hidden" name="jabatanAnggota" value="{{jabatan[5]}}">
+                                    <label for="" class="kt-label w-[100px]">Pilih Admin</label>
+                                    <select class="kt-select" data-kt-select="true" data-kt-select-enable-search="true"
+                                        name="pejabat" id="unit" data-kt-select-search-placeholder="Search..."
+                                        data-kt-select-placeholder="Pilih Admin Baru"
+                                        data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'
+                                        required>
+                                        @each(item in anggota)
+                                        <option value="{{item.pejabatRel.username}}">{{item.pejabatRel.username}} -
+                                            {{item.pejabatRel.nama}}</option>
+                                        @end
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="kt-modal-footer">
+                                <div></div>
+                                <div class="flex gap-4">
+                                    <button class="kt-btn kt-btn-secondary" data-kt-modal-dismiss="#ganti_admin">
+                                        Cancel</button><button class="kt-btn">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="kt-card p-5 border border-primary">
+                    <div class="flex flex-wrap items-center justify-between gap-5">
+                        <div class="flex items-center gap-2.5">
+                            <div class="relative size-[20px] shrink-0">
+                                <div
+                                    class="absolute leading-none start-2/4 top-2/4 -translate-y-2/4 -translate-x-2/4 rtl:translate-x-2/4">
+                                    <div class="font-semibold text-2xl text-foreground text-primary">
+                                        {{anggota.length}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-0.5">
+                                <span class="leading-none font-medium text-sm text-primary">
+                                    Jumlah Anggota Aktif
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Container -->
+</main>
+@endslot
+@end

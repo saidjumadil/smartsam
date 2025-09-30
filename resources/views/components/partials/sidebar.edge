@@ -100,6 +100,8 @@
                         </span>
                     </a>
                 </div>
+                <div class="border-b border-input mt-2 mb-1 mx-3.5">
+                </div>
                 <div class="kt-menu-item">
                     <a class="kt-menu-link gap-2.5 py-2 px-2.5 rounded-md border border-transparent kt-menu-item-active:border-border kt-menu-item-active:bg-background kt-menu-link-hover:bg-background kt-menu-link-hover:border-border"
                         href="{{route('super_admin.users')}}">
@@ -207,7 +209,7 @@
                                 href="{{route('super_admin.data.jenis_surat.index')}}">
                                 <span
                                     class="kt-menu-title text-sm text-foreground kt-menu-item-active:text-mono kt-menu-link-hover:text-mono">
-                                    Jenis Surat
+                                    Perihal
                                 </span>
                             </a>
                         </div>
@@ -221,6 +223,58 @@
                             </a>
                         </div>
                     </div>
+                </div>
+
+                <div class="border-b border-input mt-2 mb-1 mx-3.5">
+                </div>
+                <div class="kt-menu-item">
+                    <a class="kt-menu-link gap-2.5 py-2 px-2.5 rounded-md border border-transparent kt-menu-item-active:border-border kt-menu-item-active:bg-background kt-menu-link-hover:bg-background kt-menu-link-hover:border-border"
+                        href="{{route('admin.manajemenAnggota')}}">
+                        <span
+                            class="kt-menu-icon items-start text-lg text-secondary-foreground kt-menu-item-active:text-foreground kt-menu-item-here:text-foreground kt-menu-item-show:text-foreground kt-menu-link-hover:text-foreground dark:menu-item-active:text-mono dark:menu-item-here:text-mono dark:menu-item-show:text-mono dark:menu-link-hover:text-mono">
+                            <i class="ki-filled ki-folder-up">
+                            </i>
+                        </span>
+                        <span
+                            class="kt-menu-title text-sm text-foreground font-medium kt-menu-item-here:text-mono kt-menu-item-show:text-mono kt-menu-link-hover:text-mono">
+                            Manajemen Anggota
+                        </span>
+                    </a>
+                </div>
+                <div class="border-b border-input mt-2 mb-1 mx-3.5">
+                </div>
+                <div class="kt-menu-item">
+                    <a class="kt-menu-link gap-2.5 py-2 px-2.5 rounded-md border border-transparent kt-menu-item-active:border-border kt-menu-item-active:bg-background kt-menu-link-hover:bg-background kt-menu-link-hover:border-border"
+                        href="{{route('surat.surat_masuk.index')}}">
+                        <span
+                            class="kt-menu-icon items-start text-lg text-secondary-foreground kt-menu-item-active:text-foreground kt-menu-item-here:text-foreground kt-menu-item-show:text-foreground kt-menu-link-hover:text-foreground dark:menu-item-active:text-mono dark:menu-item-here:text-mono dark:menu-item-show:text-mono dark:menu-link-hover:text-mono">
+                            <i class="ki-filled ki-folder-down">
+                            </i>
+                        </span>
+                        <span
+                            class="kt-menu-title text-sm text-foreground font-medium kt-menu-item-here:text-mono kt-menu-item-show:text-mono kt-menu-link-hover:text-mono">
+                            Surat Masuk
+                        </span>
+                        @let(user = await notifSuratMasuk(session.get('user.penugasans[0].id')))
+                        @if(user)
+                        <div class="kt-badge kt-badge-primary w-4 h-4">{{user}}
+                        </div>
+                        @endif
+                    </a>
+                </div>
+                <div class="kt-menu-item">
+                    <a class="kt-menu-link gap-2.5 py-2 px-2.5 rounded-md border border-transparent kt-menu-item-active:border-border kt-menu-item-active:bg-background kt-menu-link-hover:bg-background kt-menu-link-hover:border-border"
+                        href="{{route('surat.surat_keluar.index')}}">
+                        <span
+                            class="kt-menu-icon items-start text-lg text-secondary-foreground kt-menu-item-active:text-foreground kt-menu-item-here:text-foreground kt-menu-item-show:text-foreground kt-menu-link-hover:text-foreground dark:menu-item-active:text-mono dark:menu-item-here:text-mono dark:menu-item-show:text-mono dark:menu-link-hover:text-mono">
+                            <i class="ki-filled ki-folder-up">
+                            </i>
+                        </span>
+                        <span
+                            class="kt-menu-title text-sm text-foreground font-medium kt-menu-item-here:text-mono kt-menu-item-show:text-mono kt-menu-link-hover:text-mono">
+                            Surat Keluar
+                        </span>
+                    </a>
                 </div>
             </div>
             <!-- End of Primary Menu -->
@@ -459,8 +513,7 @@
                         <input class="kt-switch" data-kt-theme-switch-state="dark" data-kt-theme-switch-toggle="true"
                             name="check" type="checkbox" value="1" />
                     </div>
-                    <a class="kt-btn kt-btn-outline justify-center w-full"
-                        href="html/demo6/authentication/classic/sign-in.html">
+                    <a class="kt-btn kt-btn-outline justify-center w-full" href="{{route('logout')}}">
                         Log out
                     </a>
                 </div>
@@ -1866,7 +1919,7 @@
             <!--End of Notifications Drawer-->
             <!-- End of Notifications -->
             <a class="kt-btn kt-btn-ghost kt-btn-icon size-8 hover:bg-background hover:[&_i]:text-primary"
-                href="html/demo6/authentication/classic/sign-in.html">
+                href="{{route('logout')}}">
                 <i class="ki-filled ki-exit-right">
                 </i>
             </a>

@@ -2,6 +2,7 @@ import Role from '#models/role';
 import env from '#start/env';
 import app from '@adonisjs/core/services/app';
 import edge from 'edge.js';
+import axios from 'axios';
 
 edge.global('appUrl', (path: any) => {
     const APP_URL = env.get('APP_URL')
@@ -61,6 +62,40 @@ edge.global('hari', (index: any) => { return hari[index] })
 edge.global('listRole', async () => {
     const roles = await Role.query()
     return roles
+})
+
+edge.global('truncateString', (string: any, length: any) => {
+    if (string)
+        return string.length > length ? string.substring(0, length) + '...' : string
+    else
+        return ''
+})
+
+edge.global('tipeStatus', (tipe: any) => {
+    switch (tipe) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 7:
+        case 8:
+        case 9:
+            tipe = 'primary'
+            break
+        case 5:
+            tipe = 'success'
+            break
+        case 6:
+            tipe = 'destructive'
+            break
+    }
+    return tipe
+})
+
+edge.global('notifSuratMasuk', async (id: any) => {
+    // console.log(id, `${env.get('APP_URL')}/api/notif-surat-masuk/${id}`)
+    const jumlah = await axios.get(`${env.get('APP_URL')}/api/notif-surat-masuk/${id}`)
+    return jumlah.data
 })
 
 

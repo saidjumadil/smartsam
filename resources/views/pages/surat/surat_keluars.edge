@@ -1,0 +1,353 @@
+@layout.app()
+@slot('main')
+<main class="grow" role="content">
+    <!-- Toolbar -->
+    <div class="pb-5">
+        <!-- Container -->
+        <div class="kt-container-fixed flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center flex-wrap gap-1 lg:gap-5">
+                <h1 class="font-medium text-lg text-mono">
+                    Surat Keluar
+                </h1>
+            </div>
+            <div class="flex items-center flex-wrap gap-1.5 lg:gap-3.5">
+                <button class="kt-btn" data-kt-modal-toggle="#modal">
+                    <i class="ki-filled ki-paper-plane"></i>
+                    Kirim Surat
+                </button>
+                <div class="kt-modal" data-kt-modal="true" id="modal">
+                    <div class="kt-modal-content pt-7.5 my-[3%] kt-container-fixed px-5 overflow-hidden"
+                        style="max-width: 700px;">
+                        <div class="kt-modal-header">
+                            <h3 class="kt-modal-title">Kirimkan Surat</h3>
+                            <button type="button" class="kt-modal-close" aria-label="Close modal"
+                                data-kt-modal-dismiss="#modal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-x" aria-hidden="true">
+                                    <path d="M18 6 6 18"></path>
+                                    <path d="m6 6 12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <form action="{{route('surat.surat_keluar.post')}}" method="post" enctype="multipart/form-data">
+                            {{ csrfField() }}
+                            <div class="kt-modal-body grid gap-y-3">
+                                <div class="flex flex-row gap-2 mb-3">
+                                    <label for="" class="kt-label w-[100px]">Nomor Surat</label>
+                                    <input type="text" class="kt-input" name="nomor_surat"
+                                        placeholder="Input Nomor Surat" required />
+                                </div>
+                                <div class="flex flex-row gap-2 mb-3">
+                                    <label for="" class="kt-label w-[100px]">Perihal</label>
+                                    <select class="kt-select" data-kt-select="true" data-kt-select-enable-search="true"
+                                        name="jenis_surat" data-kt-select-search-placeholder="Search..."
+                                        data-kt-select-placeholder="Pilih Perihal"
+                                        data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'
+                                        required>
+                                        @each(item in jenis_surats)
+                                        <option value="{{item.id}}">{{item.jenis}}</option>
+                                        @end
+                                    </select>
+                                </div>
+                                <div class="flex flex-row gap-2 mb-3">
+                                    <label for="" class="kt-label w-[100px]">Unit Penerima</label>
+                                    <select class="kt-select" data-kt-select="true" data-kt-select-enable-search="true"
+                                        name="unit" data-kt-select-search-placeholder="Search..."
+                                        data-kt-select-placeholder="Pilih Unit Penerima"
+                                        data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'
+                                        required>
+                                        @each(item in units)
+                                        <option value="{{item.id}}">{{item.nama}}</option>
+                                        @end
+                                    </select>
+                                </div>
+                                <div class="kt-form-item flex flex-row gap-2 mb-3">
+                                    <label for="" class="kt-label w-[85px]">Kirim ke Pimpinan</label>
+                                    <div class="">
+                                        <input class="kt-switch kt-switch-lg" type="checkbox" id="switch"
+                                            name="pimpinan" />
+                                        <div class="kt-form-description kt-text-gray-300 mt-1">*Surat
+                                            akan
+                                            dikirimkan langsung ke
+                                            pimpinan unit tanpa melalui admin surat</div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-row gap-2 mb-3">
+                                    <label for="" class="kt-label w-[100px]">Tanggal Surat</label>
+                                    <input type="text" name="tanggal_surat" class="kt-input" placeholder="YYYY-MM-DD"
+                                        id="flatpickr-date" required />
+                                </div>
+                                <div class="flex flex-row gap-2 mb-3">
+                                    <label for="" class="kt-label w-[100px]">File Surat</label>
+                                    <input type="file" class="kt-input" name="file" required />
+                                </div>
+                                @let(opsi = [
+                                'Tindak Lanjuti',
+                                'Proses sesuai kententuan / peraturan yang berlaku',
+                                'Koordinasi / konfirmasi dengan ybs / unit kerja terkait',
+                                'Pelajari / telaah dan berikan saran / masukan',
+                                'Wakil / hadir / terima / laporkan hasilnya',
+                                'Agendakan / persiapkan / koordinasikan',
+                                'Dijawab',
+                                'Untuk diketahui',
+                                'Untuk dimaklumi',
+                                'Teruskan',
+                                'Arsipkan',
+                                'Pesan Lainnya'
+                                ])
+                                <div class="flex flex-row gap-2 mb-3">
+                                    <label for="" class="kt-label w-[100px] align-top">Pesan</label>
+                                    <div class="w-full">
+                                        <select class="kt-select" data-kt-select="true"
+                                            data-kt-select-enable-search="true" name="catatan" id="catatan"
+                                            data-kt-select-search-placeholder="Search..."
+                                            data-kt-select-placeholder="Pilih Pesan Untuk Tindakan Surat"
+                                            data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'
+                                            required>
+                                            @each(item in opsi)
+                                            <option value="{{item}}">{{item}}</option>
+                                            @end
+                                        </select>
+                                        <textarea class="kt-textarea mt-2 hidden"
+                                            placeholder="Tambahkan pesan untuk penerima" rows="3" name="pesan"
+                                            id="pesan"></textarea>
+                                    </div>
+                                </div>
+                                <div class="flex flex-row justify-center gap-2 mb-3">
+                                    <button id="add-lampiran" type="button" class="kt-btn kt-btn-secondary"
+                                        onclick="addLampiran()">
+                                        <i class="ki-filled ki-plus"></i>
+                                        Tambah Lampiran
+                                    </button>
+                                </div>
+                                <div id="lampirans" class="grid gap-y-3">
+
+                                </div>
+                                <div id="lampiran-list" class="flex flex-row gap-2 mb-3 hidden">
+                                    <label for="" class="kt-label w-[100px]" id="lampiran-label">Lampiran</label>
+                                    <input type="file" class="kt-input" />
+                                    <button type="button" class="kt-btn kt-btn-icon kt-btn-danger"
+                                        onclick="removeLampiran(this.parentElement)">
+                                        <i class="ki-filled ki-trash"></i>
+                                    </button>
+
+                                </div>
+                            </div>
+                            <div class="kt-modal-footer">
+                                <div></div>
+                                <div class="flex gap-4">
+                                    <button class="kt-btn kt-btn-secondary" data-kt-modal-dismiss="#modal">
+                                        Cancel</button><button class="kt-btn">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Container -->
+    </div>
+    <!-- End of Toolbar -->
+
+    <!-- Container -->
+    <div class="kt-container-fixed">
+        <div class="grid grid-cols-1">
+            <div class="kt-card kt-card-grid">
+                <div class="kt-card-header flex-wrap gap-2">
+                    <h3 class="kt-card-title text-sm">
+                        List Surat Keluar
+                    </h3>
+                    <div class="flex flex-wrap gap-2 lg:gap-5">
+                        <div class="flex">
+                            <label class="kt-input">
+                                <i class="ki-filled ki-magnifier">
+                                </i>
+                                <input data-kt-datatable-search="#team_crew_table" placeholder="Search users"
+                                    type="text" value="" />
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="kt-card-content">
+                    <div data-kt-datatable="true" data-kt-datatable-state-save="false" id="team_crew_table">
+                        <div class="kt-scrollable-x-auto">
+                            <table class="kt-table table-auto kt-table-border" data-kt-datatable-table="true">
+                                <thead>
+                                    <tr>
+                                        <th class="w-[60px] text-center">
+                                            <span class="kt-table-col">
+                                                <span class="kt-table-col-label">
+                                                    No.
+                                                </span>
+                                                <span class="kt-table-col-sort">
+                                                </span>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="kt-table-col">
+                                                <span class="kt-table-col-label">
+                                                    Nomor Surat
+                                                </span>
+                                                <span class="kt-table-col-sort">
+                                                </span>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="kt-table-col">
+                                                <span class="kt-table-col-label">
+                                                    Perihal
+                                                </span>
+                                                <span class="kt-table-col-sort">
+                                                </span>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="kt-table-col">
+                                                <span class="kt-table-col-label">
+                                                    Unit Pengirim
+                                                </span>
+                                                <span class="kt-table-col-sort">
+                                                </span>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="kt-table-col">
+                                                <span class="kt-table-col-label">
+                                                    Tanggal Surat
+                                                </span>
+                                                <span class="kt-table-col-sort">
+                                                </span>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="kt-table-col">
+                                                <span class="kt-table-col-label">
+                                                    Status Surat
+                                                </span>
+                                                <span class="kt-table-col-sort">
+                                                </span>
+                                            </span>
+                                        </th>
+                                        <th>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @each((item, index) in surats)
+                                    <tr>
+                                        <td class="text-center">
+                                            {{index + 1}}
+                                        </td>
+                                        <td class="text-foreground font-normal">
+                                            {{item.nomor_surat}}
+                                        </td>
+                                        <td class="text-foreground font-normal">
+                                            {{item.jenisSuratRel.jenis}}
+                                        </td>
+                                        <td>
+                                            <p class="text-foreground font-normal">
+                                                {{item.pengirimRel.pejabatRel.nama}}
+                                            </p>
+                                            <span class="text-xs">
+                                                {{item.pengirimRel.jabatanRel.unitRel.nama}}
+                                            </span>
+                                        </td>
+                                        <td class="text-foreground font-normal">
+                                            {{date(item.tanggal_surat)}}
+                                        </td>
+                                        <td class="text-foreground font-normal">
+                                            <div class="kt-table-cell-toolbar flex flex-row gap-3 justify-center">
+                                                @if(item.status == 5)
+                                                <span
+                                                    class="kt-badge kt-badge-light kt-badge-success">{{item.statusSuratRel.status}}</span>
+                                                @elseif(item.status == 6)
+                                                <span
+                                                    class="kt-badge kt-badge-light kt-badge-destructive">{{item.statusSuratRel.status}}</span>
+                                                @else
+                                                <span
+                                                    class="kt-badge kt-badge-light kt-badge-primary">{{item.statusSuratRel.status}}</span>
+                                                @end
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <div class="kt-table-cell-toolbar flex flex-row gap-3 justify-center">
+                                                <a href="{{route('surat.surat_keluar.detail', {id: item.id})}}"
+                                                    class="kt-btn kt-btn-mono">
+                                                    <i class="ki-duotone ki-eye">
+                                                    </i>
+                                                    Detail
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @end
+                                </tbody>
+                            </table>
+                        </div>
+                        <div
+                            class="kt-card-footer justify-center md:justify-between flex-col md:flex-row gap-5 text-secondary-foreground text-sm font-medium">
+                            <div class="flex items-center gap-2 order-2 md:order-1">
+                                Show
+                                <select class="kt-select w-16" data-kt-datatable-size="true" data-kt-select=""
+                                    name="perpage">
+                                </select>
+                                per page
+                            </div>
+                            <div class="flex items-center gap-4 order-1 md:order-2">
+                                <span data-kt-datatable-info="true">
+                                </span>
+                                <div class="kt-datatable-pagination" data-kt-datatable-pagination="true">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Container -->
+
+    <script>
+        const lampiranElement = document.getElementById("lampiran-list");
+        const lampiransContainer = document.getElementById("lampirans");
+        let count = 0
+
+        function addLampiran() {
+            const lampiran = lampiranElement.cloneNode(true);
+            lampiran.classList.remove("hidden");
+            lampiran.querySelector("#lampiran-label").textContent = "Lampiran " + (++count);
+            lampiran.querySelector("input").name = "lampiran[]";
+            lampiran.querySelector("input").required = true;
+            lampiransContainer.appendChild(lampiran);
+        }
+
+        function removeLampiran(element) {
+            count--;
+            lampiransContainer.removeChild(element);
+        }
+    </script>
+
+    <script>
+        window.addEventListener("load", function () {
+            // Basic
+            flatpickr("#flatpickr-date", {
+                monthSelectorType: "static"
+            });
+        });
+    </script>
+    <script>
+        const catatan = document.getElementById("catatan");
+        const pesan = document.getElementById("pesan");
+
+        catatan.addEventListener("change", function () {
+            if (catatan.value == 'Pesan Lainnya') {
+                pesan.classList.remove("hidden");
+            } else {
+                pesan.classList.add("hidden");
+            }
+        })
+    </script>
+</main>
+@endslot
+@end

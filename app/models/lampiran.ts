@@ -1,11 +1,12 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
 import Surat from './surat.js'
+import { v4 as uuidv4 } from 'uuid'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 
 export default class Lampiran extends BaseModel {
   @column({ isPrimary: true })
-  declare id: number
+  declare id: string
 
   @column()
   declare surat: string
@@ -26,4 +27,9 @@ export default class Lampiran extends BaseModel {
     foreignKey: 'surat',
   })
   declare suratRel: BelongsTo<typeof Surat>
+
+  @beforeCreate()
+  public static async assignUuid(lampiran: Lampiran) {
+    lampiran.id = uuidv4()
+  }
 }

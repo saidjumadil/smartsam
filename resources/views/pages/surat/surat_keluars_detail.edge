@@ -1,0 +1,189 @@
+@layout.app()
+@slot('main')
+<main class="grow" role="content">
+    <!-- Toolbar -->
+    <div class="pb-5">
+        <!-- Container -->
+        <div class="kt-container-fixed flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center flex-wrap gap-1 lg:gap-5">
+                <h1 class="font-medium text-lg text-mono">
+                    Surat Keluar Detail
+                </h1>
+            </div>
+            <div class="flex items-center flex-wrap gap-1.5 lg:gap-3.5">
+            </div>
+        </div>
+        <!-- End of Container -->
+    </div>
+    <!-- End of Toolbar -->
+
+    <!-- Container -->
+    <div class="kt-container-fixed">
+        <div class="grid grid-cols-8 gap-4">
+            {{-- Detail Surat --}}
+            <div class="col-span-6 flex flex-col gap-4">
+                <div class="kt-card">
+                    <div class="kt-card-header">
+                        <h3 class="kt-card-title">
+                            Detail Surat
+                        </h3>
+                    </div>
+                    <div class="kt-card-content mb-4">
+                        <div class="flex flex-row gap-2">
+                            <div class="min-w-[350px] flex items-center justify-center">
+                                <a href="{{appUrl(`tmp/uploads/surat/${surat.id}/${surat.file}`)}}"
+                                    class="flex flex-col items-center gap-2" target="_blank" rel="noopener noreferrer">
+                                    <img src="assets/media/file-types/pdf.svg" class="min-w-[140px]">
+                                    <span class="text-center text-lg font-semibold text-muted-foreground">
+                                        {{truncateString(surat.file, 18)}}
+                                    </span>
+                                </a>
+                            </div>
+                            <div class="col-span-2 flex flex-col gap-4">
+                            </div>
+                            <div class="grid grid-cols-1 gap-3.5 gap-y-4 w-full">
+                                <div class="flex flex-col gap-1.5 text-xl font-semibold">
+                                    <div class="flex min-w-[120px]">
+                                        <span class="text-muted-foreground">
+                                            Nomor Surat :
+                                        </span>
+                                    </div>
+                                    <span class="text-foreground">
+                                        {{surat.nomor_surat}}
+                                    </span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-1.5">
+                                    <div class="flex flex-col gap-1.5">
+                                        <span class="text-sm text-muted-foreground">
+                                            Tanggal Surat
+                                        </span>
+                                        <span class="text-sm text-foreground">
+                                            {{date(surat.tanggal_surat)}}
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col gap-1.5">
+                                        <span class="text-sm text-muted-foreground">
+                                            Perihal
+                                        </span>
+                                        <span class="text-sm text-foreground">
+                                            {{surat.jenisSuratRel.jenis}}
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col gap-1.5">
+                                        <span class="text-sm text-muted-foreground">
+                                            Status Saat Ini
+                                        </span>
+                                        <span class="text-sm text-foreground">
+                                            <span class="kt-badge kt-badge-light kt-badge-{{tipeStatus(surat.status)}}">
+                                                {{surat.statusSuratRel.status}}
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-1.5">
+                                    <span class="text-sm text-muted-foreground">
+                                        Dari
+                                    </span>
+                                    <div class="kt-card">
+                                        <div class="kt-card-content py-2 px-4">
+                                            <div class="flex flex-col gap-1.5">
+                                                <span class="font-semibold text-primary">
+                                                    {{surat.pengirimRel.pejabatRel.nama}}
+                                                </span>
+                                                <span class="text-xs">
+                                                    Unit : {{surat.pengirimRel.jabatanRel.unitRel.nama}}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kt-card">
+                    <div class="kt-card-header">
+                        <h3 class="kt-card-title">
+                            Lampiran
+                        </h3>
+                    </div>
+                    <div class="kt-card-content">
+                        <div class="grid gap-2.5 lg:gap-5 w-full">
+                            @let(tipe = {
+                            "application": "pdf",
+                            })
+                            @if(surat.lampirans.length == 0)
+                            <div class="w-full flex justify-center">
+                                <div
+                                    class="kt-badge kt-badge-lg kt-badge-light kt-badge-secondary min-w-[300px] flex justify-center">
+                                    Tidak Ada
+                                    Lampiran</div>
+                            </div>
+                            @endif
+                            @each(item in surat.lampirans)
+                            <div class="flex justify-between gap-3 w-full">
+                                <div class="flex grow gap-2.5">
+                                    <img src="assets/media/file-types/pdf.svg">
+                                    <div class="flex flex-col">
+                                        <span
+                                            class="text-sm font-medium text-mono cursor-pointer hover:text-primary mb-px">
+                                            {{item.source}}
+                                        </span>
+                                        <span class="text-xs text-secondary-foreground">
+                                            Tipe File : {{tipe[item.tipe]}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <button class="kt-btn btn-sm kt-btn-secondary">
+                                    <a href="{{appUrl(`tmp/uploads/surat/${surat.id}/${item.source}`)}}" target="_blank"
+                                        rel="noopener noreferrer">
+                                        Lihat Lampiran
+                                    </a>
+                                </button>
+                            </div>
+                            @end
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Riwayat --}}
+            <div class="col-span-2">
+                <div class="kt-card">
+                    <div class="kt-card-header">
+                        <h3 class="kt-card-title">
+                            Riwayat Surat
+                        </h3>
+                    </div>
+                    <div class="kt-card-content pb-7">
+                        <div class="flex flex-col gap-5">
+                            @each(item in track_surats)
+                            <div class="border-s-2 border-{{tipeStatus(item.status)}}">
+                                <div class=" gap-3 ps-3 mb-0.5">
+                                    <span class="kt-badge kt-badge-{{tipeStatus(item.status)}} mb-2">
+                                        {{item.statusSuratRel.status}}
+                                    </span>
+                                    <div class="flex gap-1 items-center">
+                                        <span class="text-xs text-secondary-foreground flex flex-row gap-1">
+                                            {{date(new Date(item.createdAt))}} - {{time(new Date(item.createdAt))}} WIB
+                                        </span>
+                                    </div>
+                                </div>
+                                <p class="text-sm text-secondary-foreground leading-5.5 ps-3 mt-2">
+                                    Catatan :
+                                </p>
+                                <p class="text-xs text-foreground leading-5.5 ps-3">
+                                    {{item.catatan ? item.catatan : '-'}}
+                                </p>
+                            </div>
+                            @end
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End of Container -->
+</main>
+@endslot
+@end

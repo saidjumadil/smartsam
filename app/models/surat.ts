@@ -8,6 +8,7 @@ import Penugasan from './penugasan.js'
 import StatusSurat from './status_surat.js'
 import Publish from './publish.js'
 import { v4 as uuidv4 } from 'uuid'
+import JenisSurat from './jenis_surat.js'
 
 export default class Surat extends BaseModel {
   @column({ isPrimary: true })
@@ -30,6 +31,9 @@ export default class Surat extends BaseModel {
 
   @column()
   declare status: number
+
+  @column()
+  declare file: string
 
   @column()
   declare arsipkan: boolean
@@ -74,6 +78,11 @@ export default class Surat extends BaseModel {
     foreignKey: 'status',
   })
   declare statusSuratRel: BelongsTo<typeof StatusSurat>
+
+  @belongsTo(() => JenisSurat, {
+    foreignKey: 'jenis_surat',
+  })
+  declare jenisSuratRel: BelongsTo<typeof JenisSurat>
 
   @beforeCreate()
   public static async assignUuid(surat: Surat) {

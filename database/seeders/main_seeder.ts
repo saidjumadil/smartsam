@@ -25,29 +25,64 @@ export default class extends BaseSeeder {
       },
       {
         "nama": "Admin Surat"
+      },
+      {
+        "nama": "Anggota"
       }
     ])
 
     // Units
     console.log("Mulai Membuat Data Units")
-    const unit = await Unit.createMany(
-      [
-        { nama: 'Super Admin', kode: 'SA' },
-        { nama: "Perpustakaan", kode: "PERPUS" },
-        { nama: "Fakultas Ekonomi", kode: "FEKON" },
-        { nama: "Fakultas Hukum", kode: "FHUKUM" },
-        { nama: "LPPPM & PM", kode: "LPPPM" },
-        { nama: "Fakultas Keguruan", kode: "FKG" },
-        { nama: "Fakultas Pertanian", kode: "FPERT" },
-        { nama: "Laboratorium Bahasa", kode: "LABBHS" },
-        { nama: "Laboratorium Dasar", kode: "LABDAS" },
-        { nama: "Fakultas Teknik", kode: "FTEK" },
-        { nama: "Subbag. TU", kode: "TUSUB" },
-        { nama: "LPMPP", kode: "LPMPP" },
-        { nama: "SP", kode: "SP" },
-        { nama: "UPT TIK", kode: "TIK" }
-      ]
-    )
+    const dataUnit = [
+      { nama: 'Fakultas Hukum', kode: 'FH' },
+      { nama: 'Fakultas Ekonomi dan Bisnis', kode: 'FEKB' },
+      { nama: 'Fakultas Pertanian', kode: 'FP' },
+      { nama: 'Fakultas Keguruan dan Ilmu Pendidikan', kode: 'FKIP' },
+      { nama: 'Fakultas Sains dan Teknologi', kode: 'FST' },
+      { nama: 'Hukum', kode: 'H' },
+      { nama: 'Manajemen', kode: 'MAN' },
+      { nama: 'Ekonomi Pembangunan', kode: 'EKONP' },
+      { nama: 'Akuntansi', kode: 'AKUNT' },
+      { nama: 'Agribisnis', kode: 'AGRI' },
+      { nama: 'Agroteknologi', kode: 'AGROTEK' },
+      { nama: 'Akuakultur', kode: 'AKUAKULTUR' },
+      { nama: 'Pendidikan Sejarah', kode: 'PENDSEJARAH' },
+      { nama: 'Pendidikan Pancasila dan Kewarganegaraan', kode: 'PENDPANCASILA' },
+      { nama: 'Pendidikan Ilmu Pengetahuan Alam', kode: 'PENDIPA' },
+      { nama: 'Pendidikan Biologi', kode: 'PENDBIOLOGI' },
+      { nama: 'Pendidikan Bahasa Inggris', kode: 'PENDBAHASAINGGRIS' },
+      { nama: 'Pendidikan Bahasa Indonesia', kode: 'PENDBAHASAINDONESIA' },
+      { nama: 'Pendidikan Jasmani', kode: 'PENDJASMANI' },
+      { nama: 'Pendidikan Geografi', kode: 'PENDGEOGRAFI' },
+      { nama: 'Pendidikan Vokasional Seni Kuliner', kode: 'PENDVOKASISENIKULINER' },
+      { nama: 'Pendidikan Guru Sekolah Dasar', kode: 'PENDGURUSEKOLAH DASAR' },
+      { nama: 'Pendidikan Profesi Guru (PPG)', kode: 'PENDPROFESIGURU' },
+      { nama: 'Pendidikan Matematika', kode: 'PENDMATEMATIKA' },
+      { nama: 'Pendidikan Fisika', kode: 'PENDFISIKA' },
+      { nama: 'Pendidikan Kimia', kode: 'PENDKIMIA' },
+      { nama: 'Pendidikan Teknik Sipil', kode: 'PENDTEKNIKSIPIL' },
+      { nama: 'Pendidikan Teknik Mesin', kode: 'PENDTEKNIKMESIN' },
+      { nama: 'Pendidikan Teknik Industri', kode: 'PENDTEKNIKINDUSTRI' },
+      { nama: 'Informatika', kode: 'INF' },
+      { nama: 'Matematika', kode: 'MAT' },
+      { nama: 'Biologi', kode: 'BIO' },
+      { nama: 'Fisika', kode: 'FIS' },
+      { nama: 'Kimia', kode: 'KIM' },
+      { nama: 'GeoFisika', kode: 'GEOFISIKA' },
+      { nama: 'Magister Pendidikan Ilmu Pengetahuan Sosial', kode: 'MAGIPENDIPA' },
+      { nama: 'Magister Hukum', kode: 'MAGISTUDI' },
+      { nama: 'Biro Akademik, Kemahasiswaan, dan Kerja Sama', kode: 'BAKS' },
+      { nama: 'Biro Perencanaan, Keuangan, dan Umum', kode: 'BPKU' },
+      { nama: 'LPPM', kode: 'LPPM' },
+      { nama: 'LPMPP', kode: 'LPMPP' },
+      { nama: 'SATUAN PENGAWASAN', kode: 'SP' },
+      { nama: 'UPA TIK', kode: 'TIK' },
+      { nama: 'UPA PERPUSTAKAAN', kode: 'UPPER' },
+      { nama: 'UPA LABORATORIUM TERPADU', kode: 'ULABTER' },
+      { nama: 'UPA BAHASA', kode: 'UBAHASA' },
+      { nama: 'UPA PENGEMBANGAN KARIER DAN KEWIRAUSAHAAN', kode: 'UPKARIER' },
+    ]
+    const unit = await Unit.createMany(dataUnit)
 
     // Jabatans
     console.log("Mulai Membuat Data Jabatans")
@@ -65,7 +100,14 @@ export default class extends BaseSeeder {
         role: role[3].id
       }
     })
-    const penugasan = pimpinan.concat(admin_surat)
+    const anggota = unit.map((item) => {
+      return {
+        nama: 'Anggota ' + item.nama,
+        unit: item.id,
+        role: role[4].id
+      }
+    })
+    const penugasan = [...pimpinan, ...admin_surat, ...anggota]
     await Jabatan.createMany(penugasan)
 
     // Status Surat
@@ -73,25 +115,28 @@ export default class extends BaseSeeder {
     await StatusSurat.createMany([
       { status: "Surat Masuk" },
       { status: "Surat Diterima Admin" },
-      { status: "Disposisi Surat" },
+      { status: "Disposisi Surat ke Pimpinan" },
       { status: "Surat Diterima Pimpinan" },
-      { status: "Surat Disetujui" },
-      { status: "Surat Ditolak" }
+      { status: "Surat Didisposisi Ke Unit Lain" },
+      { status: "Surat Didisposisi untuk ditindaklanjuti" },
+      { status: "Surat Sedang Diproses" },
+      { status: "Surat Selesai" },
+      { status: "Surat Ditolak" },
     ])
 
     // Jenis Surat
     console.log("Mulai Membuat Data Jenis Surat")
     await JenisSurat.createMany([
-      { jenis: 'Akreditasi', kode: 'AK' },
-      { jenis: 'REKAPITULASI SURAT', kode: 'TU' },
-      { jenis: 'Keuangan', kode: 'KU' },
-      { jenis: 'Kepegawaian', kode: 'KP' },
-      { jenis: 'Rumah Tangga dan BMN', kode: 'RT' },
-      { jenis: 'KURIKULUM AKADEMIK', kode: 'KR' },
-      { jenis: 'KERJASAMA', kode: 'KS' },
-      { jenis: 'HUMAS', kode: 'HM' },
-      { jenis: 'PERENCANAAN', kode: 'PR' },
-      { jenis: 'KEMAHASISWAAN', kode: 'KM' }
+      { jenis: "KEMAHASISWAAN", kode: "KM" },
+      { jenis: "PERENCANAAN", kode: "PR" },
+      { jenis: "HUMAS", kode: "HM" },
+      { jenis: "KERJASAMA", kode: "KS" },
+      { jenis: "KURIKULUM AKADEMIK", kode: "KR" },
+      { jenis: "RUMAH TANGGA DAN BMN", kode: "RT" },
+      { jenis: "KEPEGAWAIAN", kode: "KP" },
+      { jenis: "KEUANGAN", kode: "KU" },
+      { jenis: "REKAPITULASI SURAT", kode: "TU" },
+      { jenis: "AKREDITASI", kode: "AK" }
     ])
 
     // Kategori

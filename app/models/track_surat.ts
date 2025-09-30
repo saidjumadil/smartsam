@@ -48,5 +48,5 @@ export default class TrackSurat extends BaseModel {
   @belongsTo(() => StatusSurat, {
     foreignKey: 'status',
   })
-  declare statusRel: BelongsTo<typeof StatusSurat>
+  declare statusSuratRel: BelongsTo<typeof StatusSurat>
 }

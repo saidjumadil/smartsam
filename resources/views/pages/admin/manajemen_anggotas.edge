@@ -1,0 +1,185 @@
+@layout.app()
+@slot('main')
+<main class="grow" unit="content">
+       <!-- Toolbar -->
+       <div class="pb-5">
+              <!-- Container -->
+              <div class="kt-container-fixed flex items-center justify-between flex-wrap gap-3">
+                     <div class="flex items-center flex-wrap gap-1 lg:gap-5">
+                            <h1 class="font-medium text-lg text-mono">
+                                   List Unit
+                            </h1>
+                     </div>
+                     <div class="flex items-center flex-wrap gap-1.5 lg:gap-3.5">
+                            <button class="kt-btn" data-kt-modal-toggle="#modal">
+                                   <i class="ki-filled ki-plus"></i>
+                                   Tambah Unit
+                            </button>
+                            <div class="kt-modal" data-kt-modal="true" id="modal">
+                                   <div class="kt-modal-content pt-7.5 my-[3%] kt-container-fixed px-5 overflow-hidden"
+                                          style="max-width: 600px">
+                                          <div class="kt-modal-header">
+                                                 <h3 class="kt-modal-title">Tambah Unit</h3>
+                                                 <button type="button" class="kt-modal-close" aria-label="Close modal"
+                                                        data-kt-modal-dismiss="#modal">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                               viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                               stroke-width="2" stroke-linecap="round"
+                                                               stroke-linejoin="round" class="lucide lucide-x"
+                                                               aria-hidden="true">
+                                                               <path d="M18 6 6 18"></path>
+                                                               <path d="m6 6 12 12"></path>
+                                                        </svg>
+                                                 </button>
+                                          </div>
+                                          <form action="{{route('super_admin.data.unit.post')}}" method="post">
+                                                 {{ csrfField() }}
+                                                 <div class="kt-modal-body grid gap-y-3">
+                                                        <div class="flex flex-row gap-2 mb-3">
+                                                               <label for="" class="kt-label w-[100px]">Nama
+                                                                      Unit</label>
+                                                               <input type="text" class="kt-input" name="nama"
+                                                                      placeholder="Input Unit Baru" />
+                                                        </div>
+                                                        <div class="flex flex-row gap-2">
+                                                               <label for="" class="kt-label w-[100px]">Kode
+                                                                      Unit</label>
+                                                               <input type="text" class="kt-input" name="kode"
+                                                                      placeholder="Input Unit Baru" />
+                                                        </div>
+                                                 </div>
+                                                 <div class="kt-modal-footer">
+                                                        <div></div>
+                                                        <div class="flex gap-4">
+                                                               <button class="kt-btn kt-btn-secondary"
+                                                                      data-kt-modal-dismiss="#modal">
+                                                                      Cancel</button><button
+                                                                      class="kt-btn">Submit</button>
+                                                        </div>
+                                                 </div>
+                                          </form>
+                                   </div>
+                            </div>
+                     </div>
+              </div>
+              <!-- End of Container -->
+       </div>
+       <!-- End of Toolbar -->
+
+       <!-- Container -->
+       <div class="kt-container-fixed">
+              <div class="grid grid-cols-1">
+                     <div class="kt-card kt-card-grid">
+                            <div class="kt-card-header flex-wrap gap-2">
+                                   <h3 class="kt-card-title text-sm">
+                                          List Unit Pada Aplikasi
+                                   </h3>
+                                   <div class="flex flex-wrap gap-2 lg:gap-5">
+                                          <div class="flex">
+                                                 <label class="kt-input">
+                                                        <i class="ki-filled ki-magnifier">
+                                                        </i>
+                                                        <input data-kt-datatable-search="#team_crew_table"
+                                                               placeholder="Search users" type="text" value="" />
+                                                 </label>
+                                          </div>
+                                   </div>
+                            </div>
+                            <div class="kt-card-content">
+                                   <div data-kt-datatable="true" data-kt-datatable-state-save="false"
+                                          id="team_crew_table">
+                                          <div class="kt-scrollable-x-auto">
+                                                 <table class="kt-table table-auto kt-table-border"
+                                                        data-kt-datatable-table="true">
+                                                        <thead>
+                                                               <tr>
+                                                                      <th class="w-[60px] text-center">
+                                                                             <span class="kt-table-col">
+                                                                                    <span class="kt-table-col-label">
+                                                                                           No.
+                                                                                    </span>
+                                                                                    <span class="kt-table-col-sort">
+                                                                                    </span>
+                                                                             </span>
+                                                                      </th>
+                                                                      <th class="min-w-[300px]">
+                                                                             <span class="kt-table-col">
+                                                                                    <span class="kt-table-col-label">
+                                                                                           Nama Unit
+                                                                                    </span>
+                                                                                    <span class="kt-table-col-sort">
+                                                                                    </span>
+                                                                             </span>
+                                                                      </th>
+                                                                      <th class="min-w-[300px]">
+                                                                             <span class="kt-table-col">
+                                                                                    <span class="kt-table-col-label">
+                                                                                           Kode Unit
+                                                                                    </span>
+                                                                                    <span class="kt-table-col-sort">
+                                                                                    </span>
+                                                                             </span>
+                                                                      </th>
+                                                                      <th class="min-w-[180px]">
+                                                                      </th>
+                                                               </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                               @each((item, index) in units)
+                                                               <tr>
+                                                                      <td class="text-center">
+                                                                             {{index + 1}}
+                                                                      </td>
+                                                                      <td class="text-foreground font-normal">
+                                                                             {{item.nama}}
+                                                                      </td>
+                                                                      <td class="text-foreground font-normal">
+                                                                             {{item.kode}}
+                                                                      </td>
+                                                                      </td>
+
+                                                                      <td class="text-center">
+                                                                             <div
+                                                                                    class="kt-table-cell-toolbar flex flex-row gap-3 justify-center">
+                                                                                    <div>
+                                                                                           <a class="kt-btn kt-btn-mono"
+                                                                                                  href="{{route('admin.manajemenAnggota.detail', {id: item.id})}}">
+                                                                                                  <i
+                                                                                                         class="ki-filled ki-pencil"></i>
+                                                                                                  Manajemen Anggota
+                                                                                           </a>
+                                                                                    </div>
+                                                                             </div>
+                                                                      </td>
+                                                               </tr>
+                                                               @end
+                                                        </tbody>
+                                                 </table>
+                                          </div>
+                                          <div
+                                                 class="kt-card-footer justify-center md:justify-between flex-col md:flex-row gap-5 text-secondary-foreground text-sm font-medium">
+                                                 <div class="flex items-center gap-2 order-2 md:order-1">
+                                                        Show
+                                                        <select class="kt-select w-16" data-kt-datatable-size="true"
+                                                               data-kt-select="" name="perpage">
+                                                        </select>
+                                                        per page
+                                                 </div>
+                                                 <div class="flex items-center gap-4 order-1 md:order-2">
+                                                        <span data-kt-datatable-info="true">
+                                                        </span>
+                                                        <div class="kt-datatable-pagination"
+                                                               data-kt-datatable-pagination="true">
+                                                        </div>
+                                                 </div>
+                                          </div>
+                                   </div>
+                            </div>
+                     </div>
+              </div>
+       </div>
+       <!-- End of Container -->
+
+</main>
+@endslot
+@end

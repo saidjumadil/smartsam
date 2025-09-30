@@ -2,6 +2,10 @@ import { defineConfig } from 'vite'
 import adonisjs from '@adonisjs/vite/client'
 
 export default defineConfig({
+  build: {
+    outDir: 'public/frontend',
+    emptyOutDir: false // ⚠️ tidak akan hapus isi folder saat build
+  },
   plugins: [
     adonisjs({
       /**

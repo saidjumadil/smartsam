@@ -12,6 +12,7 @@ export default class extends BaseSchema {
       table.integer('pejabat_penerima').unsigned().references('penugasans.id').onDelete('CASCADE').onUpdate('CASCADE')
       table.date('tanggal_surat').notNullable()
       table.integer('status').unsigned().references('status_surats.id').onDelete('CASCADE').onUpdate('CASCADE')
+      table.text('file').notNullable()
       table.boolean('arsipkan').defaultTo(false)
 
       table.timestamp('created_at')
