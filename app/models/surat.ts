@@ -27,6 +27,9 @@ export default class Surat extends BaseModel {
   declare pejabat_penerima: number
 
   @column()
+  declare perihal: string
+
+  @column()
   declare tanggal_surat: DateTime
 
   @column()
@@ -34,6 +37,9 @@ export default class Surat extends BaseModel {
 
   @column()
   declare file: string
+
+  @column()
+  declare langsung_pimpinan: boolean
 
   @column()
   declare arsipkan: boolean

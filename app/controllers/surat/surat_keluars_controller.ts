@@ -69,6 +69,7 @@ export default class SuratKeluarsController {
         const add = await Surat.create({
             nomor_surat: post.nomor_surat,
             jenis_surat: post.jenis_surat,
+            perihal: post.perihal,
             pejabat_penerima: pejabat?.penugasans[0].id,
             pejabat_pengirim: user.penugasans[0].id,
             tanggal_surat: post.tanggal_surat,

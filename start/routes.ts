@@ -86,5 +86,12 @@ router.group(() => {
         }).prefix('surat-keluar').as('surat_keluar')
     }).prefix('surat').as('surat')
 
+    router.group(() => {
+        router.get('/', '#controllers/pesans_controller.index').as('index')
+        router.post('/', '#controllers/pesans_controller.post').as('post')
+        router.get('/:id', '#controllers/pesans_controller.conversation').as('conversation')
+        router.post('/:id', '#controllers/pesans_controller.balas').as('balas')
+    }).prefix('pesan').as('pesan')
+
 }).use(middleware.auth())
 router.get('/api/notif-surat-masuk/:id', '#controllers/api_controller.notifSuratMasuk').as('notifSuratMasuk')

@@ -7,19 +7,19 @@
         <div class="kt-container-fixed flex items-center justify-between flex-wrap gap-3">
             <div class="flex items-center flex-wrap gap-1 lg:gap-5">
                 <h1 class="font-medium text-lg text-mono">
-                    Surat Keluar
+                    List Pesan
                 </h1>
             </div>
             <div class="flex items-center flex-wrap gap-1.5 lg:gap-3.5">
                 <button class="kt-btn" data-kt-modal-toggle="#modal">
                     <i class="ki-filled ki-paper-plane"></i>
-                    Kirim Surat
+                    Kirim Pesan
                 </button>
                 <div class="kt-modal" data-kt-modal="true" id="modal">
                     <div class="kt-modal-content pt-7.5 my-[3%] kt-container-fixed px-5 overflow-hidden"
                         style="max-width: 700px;">
                         <div class="kt-modal-header">
-                            <h3 class="kt-modal-title">Kirimkan Surat</h3>
+                            <h3 class="kt-modal-title">Kirimkan Pesan</h3>
                             <button type="button" class="kt-modal-close" aria-label="Close modal"
                                 data-kt-modal-dismiss="#modal">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -30,95 +30,35 @@
                                 </svg>
                             </button>
                         </div>
-                        <form action="{{route('surat.surat_keluar.post')}}" method="post" enctype="multipart/form-data">
+                        <form action="{{route('pesan.post')}}" method="post" enctype="multipart/form-data">
                             {{ csrfField() }}
                             <div class="kt-modal-body grid gap-y-3">
                                 <div class="flex flex-row gap-2 mb-3">
-                                    <label for="" class="kt-label w-[100px]">Nomor Surat</label>
-                                    <input type="text" class="kt-input" name="nomor_surat"
-                                        placeholder="Input Nomor Surat" required />
-                                </div>
-                                <div class="flex flex-row gap-2 mb-3">
-                                    <label for="" class="kt-label w-[100px]">Jenis Surat</label>
-                                    <select class="kt-select" data-kt-select="true" data-kt-select-enable-search="true"
-                                        name="jenis_surat" data-kt-select-search-placeholder="Search..."
-                                        data-kt-select-placeholder="Pilih Perihal"
-                                        data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'
-                                        required>
-                                        @each(item in jenis_surats)
-                                        <option value="{{item.id}}">{{item.jenis}}</option>
+                                    <label for="" class="kt-label w-[100px]">Penerima</label>
+                                    <select data-kt-select-enable-search="true" name="user[]" class="kt-select"
+                                        data-kt-select="true" data-kt-select-multiple="true" multiple
+                                        data-kt-select-placeholder="Pilih Penerima"
+                                        data-kt-select-config='{"displaySeparator": " | "}' required>
+                                        @each(item in pejabat)
+                                        <option value="{{item.penugasans[0].pejabatRel.id}}">
+                                            {{item.penugasans[0].pejabatRel.username}} -
+                                            {{item.penugasans[0].pejabatRel.nama}}
+                                        </option>
                                         @end
                                     </select>
                                 </div>
                                 <div class="flex flex-row gap-2 mb-3">
                                     <label for="" class="kt-label w-[100px]">Perihal</label>
-                                    <input type="text" name="perihal" class="kt-input" placeholder="Perihal Surat"
+                                    <input type="text" class="kt-input" name="perihal" placeholder="Input Perihal"
                                         required />
                                 </div>
                                 <div class="flex flex-row gap-2 mb-3">
-                                    <label for="" class="kt-label w-[100px]">Unit Penerima</label>
-                                    <select class="kt-select" data-kt-select="true" data-kt-select-enable-search="true"
-                                        name="unit" data-kt-select-search-placeholder="Search..."
-                                        data-kt-select-placeholder="Pilih Unit Penerima"
-                                        data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'
-                                        required>
-                                        @each(item in units)
-                                        <option value="{{item.id}}">{{item.nama}}</option>
-                                        @end
-                                    </select>
-                                </div>
-                                <div class="kt-form-item flex flex-row gap-2 mb-3">
-                                    <label for="" class="kt-label w-[85px]">Kirim ke Pimpinan</label>
-                                    <div class="">
-                                        <input class="kt-switch kt-switch-lg" type="checkbox" id="switch"
-                                            name="pimpinan" />
-                                        <div class="kt-form-description kt-text-gray-300 mt-1">*Surat
-                                            akan
-                                            dikirimkan langsung ke
-                                            pimpinan unit tanpa melalui admin surat</div>
-                                    </div>
-                                </div>
-                                <div class="flex flex-row gap-2 mb-3">
-                                    <label for="" class="kt-label w-[100px]">Tanggal Surat</label>
-                                    <input type="text" name="tanggal_surat" class="kt-input" placeholder="YYYY-MM-DD"
-                                        id="flatpickr-date" required />
-                                </div>
-                                <div class="flex flex-row gap-2 mb-3">
-                                    <label for="" class="kt-label w-[100px]">File Surat</label>
-                                    <input type="file" class="kt-input" name="file" required />
-                                </div>
-                                @let(opsi = [
-                                'Tindak Lanjuti',
-                                'Proses sesuai kententuan / peraturan yang berlaku',
-                                'Koordinasi / konfirmasi dengan ybs / unit kerja terkait',
-                                'Pelajari / telaah dan berikan saran / masukan',
-                                'Wakil / hadir / terima / laporkan hasilnya',
-                                'Agendakan / persiapkan / koordinasikan',
-                                'Dijawab',
-                                'Untuk diketahui',
-                                'Untuk dimaklumi',
-                                'Teruskan',
-                                'Arsipkan',
-                                'Pesan Lainnya'
-                                ])
-                                {{-- <div class="flex flex-row gap-2 mb-3">
                                     <label for="" class="kt-label w-[100px] align-top">Pesan</label>
                                     <div class="w-full">
-                                        <select class="kt-select" data-kt-select="true"
-                                            data-kt-select-enable-search="true" name="catatan" id="catatan"
-                                            data-kt-select-search-placeholder="Search..."
-                                            data-kt-select-placeholder="Pilih Pesan Untuk Tindakan Surat"
-                                            data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'
-                                            required>
-                                            @each(item in opsi)
-                                            <option value="{{item}}">{{item}}</option>
-                                            @end
-                                        </select>
-                                        <textarea class="kt-textarea mt-2 hidden"
-                                            placeholder="Tambahkan pesan untuk penerima" rows="3" name="pesan"
-                                            id="pesan"></textarea>
+                                        <textarea class="kt-textarea mt-2" placeholder="Tambahkan pesan untuk penerima"
+                                            rows="3" name="isi"></textarea>
                                     </div>
-                                </div> --}}
+                                </div>
                                 <div class="flex flex-row justify-center gap-2 mb-3">
                                     <button id="add-lampiran" type="button" class="kt-btn kt-btn-secondary"
                                         onclick="addLampiran()">
@@ -192,15 +132,6 @@
                                         <th>
                                             <span class="kt-table-col">
                                                 <span class="kt-table-col-label">
-                                                    Nomor Surat
-                                                </span>
-                                                <span class="kt-table-col-sort">
-                                                </span>
-                                            </span>
-                                        </th>
-                                        <th>
-                                            <span class="kt-table-col">
-                                                <span class="kt-table-col-label">
                                                     Perihal
                                                 </span>
                                                 <span class="kt-table-col-sort">
@@ -210,78 +141,46 @@
                                         <th>
                                             <span class="kt-table-col">
                                                 <span class="kt-table-col-label">
-                                                    Unit Pengirim
+                                                    Dari
                                                 </span>
                                                 <span class="kt-table-col-sort">
                                                 </span>
                                             </span>
                                         </th>
-                                        <th>
-                                            <span class="kt-table-col">
-                                                <span class="kt-table-col-label">
-                                                    Tanggal Surat
-                                                </span>
-                                                <span class="kt-table-col-sort">
-                                                </span>
-                                            </span>
-                                        </th>
-                                        <th>
-                                            <span class="kt-table-col">
-                                                <span class="kt-table-col-label">
-                                                    Status Surat
-                                                </span>
-                                                <span class="kt-table-col-sort">
-                                                </span>
-                                            </span>
-                                        </th>
-                                        <th>
+                                        <th class="w-[100px]">
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @each((item, index) in surats)
+                                    @each((item, index) in conversations)
                                     <tr>
                                         <td class="text-center">
                                             {{index + 1}}
                                         </td>
                                         <td class="text-foreground font-normal">
-                                            {{item.nomor_surat}}
+                                            {{item.perihal}}
                                         </td>
                                         <td class="text-foreground font-normal">
-                                            {{item.jenisSuratRel.jenis}}
-                                        </td>
-                                        <td>
                                             <p class="text-foreground font-normal">
-                                                {{item.pengirimRel.pejabatRel.nama}}
+                                                {{item.pembuat.nama}}
                                             </p>
                                             <span class="text-xs">
-                                                {{item.pengirimRel.jabatanRel.unitRel.nama}}
+                                                {{item.pembuat.username}}
                                             </span>
-                                        </td>
-                                        <td class="text-foreground font-normal">
-                                            {{date(item.tanggal_surat)}}
-                                        </td>
-                                        <td class="text-foreground font-normal">
-                                            <div class="kt-table-cell-toolbar flex flex-row gap-3 justify-center">
-                                                @if(item.status == 5)
-                                                <span
-                                                    class="kt-badge kt-badge-light kt-badge-success">{{item.statusSuratRel.status}}</span>
-                                                @elseif(item.status == 6)
-                                                <span
-                                                    class="kt-badge kt-badge-light kt-badge-destructive">{{item.statusSuratRel.status}}</span>
-                                                @else
-                                                <span
-                                                    class="kt-badge kt-badge-light kt-badge-primary">{{item.statusSuratRel.status}}</span>
-                                                @end
-                                            </div>
                                         </td>
                                         <td class="text-center">
                                             <div class="kt-table-cell-toolbar flex flex-row gap-3 justify-center">
-                                                <a href="{{route('surat.surat_keluar.detail', {id: item.id})}}"
-                                                    class="kt-btn kt-btn-mono">
+                                                <a href="{{route('pesan.conversation', {id: item.id})}}"
+                                                    class="kt-btn kt-btn-{{item.pesans == 0 ? 'mono' : 'destructive'}}">
+                                                    @if(item.pesans)
+                                                    <i class="ki-duotone ki-information-2">
+                                                    </i>
+                                                    {{item.pesans}} Pesan Belum Dibaca
+                                                    @else
                                                     <i class="ki-duotone ki-eye">
                                                     </i>
                                                     Detail
+                                                    @end
                                                 </a>
                                             </div>
                                         </td>
@@ -333,14 +232,6 @@
         }
     </script>
 
-    <script>
-        window.addEventListener("load", function () {
-            // Basic
-            flatpickr("#flatpickr-date", {
-                monthSelectorType: "static"
-            });
-        });
-    </script>
     <script>
         const catatan = document.getElementById("catatan");
         const pesan = document.getElementById("pesan");
