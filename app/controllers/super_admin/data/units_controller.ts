@@ -10,7 +10,7 @@ export default class UnitsController {
 
     async post({ request, response, session }: any) {
         const post = request.all()
-        const unit = await Unit.create({ nama: post.nama, kode: post.kode })
+        const unit = await Unit.create({ nama: post.nama })
         if (unit) {
             session.flash('success', 'Data Berhasil Ditambahkan')
             return response.redirect().back()

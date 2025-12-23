@@ -14,6 +14,7 @@ import { getSSOClient } from '#services/sso_client_service'
 
 router.on('/').render('pages/home')
 router.get('/login', '#controllers/auth_controller.login').as('login')
+router.get('/callback', '#controllers/auth_controller.callback').as('callback')
 router.get('/test-sso', async () => {
     const client = await getSSOClient()
     return client.metadata // akan tampil client config

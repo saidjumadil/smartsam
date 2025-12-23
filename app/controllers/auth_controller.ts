@@ -4,9 +4,9 @@ import User from "#models/user"
 import { getSSOClient } from "#services/sso_client_service"
 
 export default class AuthController {
-    async login({ response, view }: any) {
+    async login({ response }: any) {
 
-        return view.render('pages/login')
+        // return view.render('pages/login')
 
         const client = await getSSOClient()
         const url = client.authorizationUrl({
@@ -16,7 +16,7 @@ export default class AuthController {
 
     }
 
-    async callback({ request, response, session }: any) {
+    async callback({ request, response, session, auth }: any) {
         const client = await getSSOClient()
 
         // ambil query parameter code & state
@@ -29,11 +29,29 @@ export default class AuthController {
             // { exchangeBody: { client_secret: process.env.SSO_CLIENT_SECRET } } // kadang dibutuhkan
         )
 
-        const userInfo = await client.userinfo(tokenSet.access_token!)
-        return userInfo
+        const userInfo: any = await client.userinfo(tokenSet.access_token!)
+        // return userInfo
 
         // Simpan user ke session
-        session.put('user', userInfo)
+        const user = await User.query()
+            .where('username', userInfo.preferred_username)
+            .preload('penugasans', (query) => {
+                query.select('id', 'pejabat', 'status', 'jabatan')
+                    .whereIn('status', ['aktif', 'plt'])
+                    .preload('jabatanRel', (query) => {
+                        query.select('id', 'unit', 'role')
+                    })
+            })
+            .first()
+
+        if (!user) {
+            console.log("NIP atau Password salah")
+            session.flash('notif', { tipe: 'danger', msg: 'NPM atau Password salah' })
+            return response.redirect().back()
+        }
+
+        session.put('user', user)
+        await auth.use('web').login(user)
         return response.redirect().toRoute('super_admin.dashboard')
     }
 

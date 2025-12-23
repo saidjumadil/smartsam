@@ -65,7 +65,7 @@ export default class SuratKeluarsController {
 
         const file = request.file('file')
 
-        const fileName = pejabat?.unitRel.kode + '_' + post.nomor_surat + '.' + file.extname
+        const fileName = post.nomor_surat + '.' + file.extname
         const add = await Surat.create({
             nomor_surat: post.nomor_surat,
             jenis_surat: post.jenis_surat,
@@ -106,7 +106,7 @@ export default class SuratKeluarsController {
             if (lampirans.length > 0) {
                 for (const lampiran of lampirans) {
                     console.log(lampiran)
-                    const fileName = 'Lampiran_' + pejabat?.unitRel.kode + '_' + post.nomor_surat + '.' + lampiran.extname
+                    const fileName = 'Lampiran_' + post.nomor_surat + '.' + lampiran.extname
                     await lampiran.move(app.tmpPath(`uploads/surat/${add.id}`), {
                         name: fileName,
                         overwrite: true

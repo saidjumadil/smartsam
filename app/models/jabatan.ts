@@ -12,6 +12,9 @@ export default class Jabatan extends BaseModel {
   declare id: string
 
   @column()
+  declare id_pusat: number
+
+  @column()
   declare nama: string
 
   @column()

@@ -6,8 +6,11 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').notNullable().unique().primary()
-      table.string('nama', 150).unique()
-      table.string('kode', 40).unique()
+      table.integer('id_pusat', 3).unique()
+      table.string('nama', 150)
+      // table.string('kode', 40).unique()
+      table.string('jenis', 40)
+      table.integer('id_induk').unsigned().references('units.id_pusat').onDelete('CASCADE').onUpdate('CASCADE')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')
