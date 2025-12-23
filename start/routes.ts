@@ -12,7 +12,7 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 import { getSSOClient } from '#services/sso_client_service'
 
-router.on('/').render('pages/home')
+router.on('/').redirect('/login')
 router.get('/login', '#controllers/auth_controller.login').as('login')
 router.get('/callback', '#controllers/auth_controller.callback').as('callback')
 router.get('/test-sso', async () => {
