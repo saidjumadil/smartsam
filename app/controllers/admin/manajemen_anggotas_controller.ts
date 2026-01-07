@@ -5,14 +5,20 @@ import Unit from "#models/unit"
 import User from "#models/user"
 
 export default class ManajemenAnggotasController {
-    async index({ view }: any) {
-        const units = await Unit.query().orderBy('id', 'asc')
-        return view.render('pages/admin/manajemen_anggotas', { units })
+    async index({ view, session, response }: any) {
+        const user = session.get('user')
+        console.log(user.penugasans[0].jabatanRel)
+        if (user.penugasans[0].jabatanRel.role == 1) {
+            const units = await Unit.query().orderBy('id', 'asc')
+            return view.render('pages/admin/manajemen_anggotas', { units })
+        } else {
+            return response.redirect().toRoute('admin.manajemenAnggota.detail', { id: user.penugasans[0].jabatanRel.unit })
+        }
     }
 
     async detail({ view, params }: any) {
         const unit: any = await Unit.query()
-            .select('id', 'nama', 'kode')
+            .select('id', 'nama')
             .preload('jabatans', (query) => {
                 query.select('id', 'nama', 'role', 'unit')
                     .preload('penugasans', (query) => {
@@ -27,6 +33,7 @@ export default class ManajemenAnggotasController {
         unit.jabatans.forEach((item: any) => {
             jabatan[item.role] = item.id
         })
+        console.log(unit.jabatans[0].penugasans)
 
         const anggota = await Penugasan.query()
             .preload('pejabatRel', (query) => {
@@ -110,27 +117,28 @@ export default class ManajemenAnggotasController {
         const penugasanBaru: any = await Penugasan.query()
             .where('pejabat', post.pejabat).andWhere('status', '!=', 'tidak aktif').first()
 
-        const pejabatLama = penugasanLama?.pejabat
-        penugasanLama.status = 'tidak aktif'
-        penugasanBaru.status = 'tidak aktif'
+        if (penugasanLama) {
+            const pejabatLama = penugasanLama?.pejabat
+            penugasanLama.status = 'tidak aktif'
+            await penugasanLama.save()
 
-        await penugasanBaru.save()
-        const updatePenugasanLama = await penugasanLama.save()
-
-        const updatePenugasanBaru = await Penugasan.createMany([
-            {
-                pejabat: post.pejabat,
-                jabatan: params.jabatan,
-                status: "aktif"
-            },
-            {
+            await Penugasan.create({
                 pejabat: pejabatLama,
                 jabatan: post.jabatanAnggota,
                 status: "aktif"
-            }
-        ])
+            })
+        }
+        penugasanBaru.status = 'tidak aktif'
 
-        if (updatePenugasanLama && updatePenugasanBaru) {
+        await penugasanBaru.save()
+
+        const updatePenugasanBaru = await Penugasan.create({
+            pejabat: post.pejabat,
+            jabatan: params.jabatan,
+            status: "aktif"
+        })
+
+        if (updatePenugasanBaru) {
             session.flash('success', 'Data Berhasil Diubah')
         } else {
             session.flash('error', 'Data Gagal Diubah')

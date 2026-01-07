@@ -3,31 +3,31 @@
     <!-- Sidebar Header -->
     <div id="sidebar_header">
         <div class="flex items-center gap-2.5 px-3.5 h-[70px]">
-            <a href="html/demo6/index.html">
+            <a href="{{route('super_admin.dashboard')}}">
                 <img class="dark:hidden h-[42px]" src="assets/media/app/unsam.png" />
                 <img class="hidden dark:inline-block h-[42px]" src="assets/media/app/unsam.png" />
             </a>
             <div class="kt-menu kt-menu-default grow" data-kt-menu="true">
-                <div class="kt-menu-item grow" data-kt-menu-item-offset="0px,0px"
+                <div class="kt-menu-item grow" data-kt-menu-item-offset="0px,0px" {{--
                     data-kt-menu-item-placement="bottom-start" data-kt-menu-item-toggle="dropdown"
-                    data-kt-menu-item-trigger="hover">
+                    data-kt-menu-item-trigger="hover" --}}>
                     <div class="kt-menu-label cursor-pointer text-mono font-medium grow justify-between">
                         <div class="grid">
                             <span class="text-base font-medium text-mono grow justify-start">
-                                SMARTSAM
+                                E-SURAT
                             </span>
                             <span class="text-xs text-muted-foreground">
                                 Universitas Samudra
                             </span>
                         </div>
-                        <span class="kt-menu-arrow">
+                        {{-- <span class="kt-menu-arrow">
                             <i class="ki-filled ki-down">
                             </i>
-                        </span>
+                        </span> --}}
                     </div>
                     <div class="kt-menu-dropdown w-48 py-2">
                         <div class="kt-menu-item">
-                            <a class="kt-menu-link" href="html/demo6/public-profile/profiles/default.html" tabindex="0">
+                            <a class="kt-menu-link" href="{{route('super_admin.dashboard')}}" tabindex="0">
                                 <span class="kt-menu-icon">
                                     <i class="ki-filled ki-profile-circle">
                                     </i>
@@ -315,14 +315,26 @@
     </div>
     <!-- End of Sidebar kt-menu-->
     <!-- Footer -->
-    <div class="flex flex-center justify-between shrink-0 ps-4 pe-3.5 mb-3.5" id="sidebar_footer">
+    <div class="flex flex-center justify-between shrink-0 ps-4 pe-3.5 mb-3.5 pb-6" id="sidebar_footer">
         <!-- User -->
-        <div data-kt-dropdown="true" data-kt-dropdown-offset="10px, 10px" data-kt-dropdown-offset-rtl="-20px, 10px"
+        <div data-kt-dropdown="true" data-kt-dropdown-offset="10px, 10px" data-kt-dropdown-offset-rtl="-20px, 10px" {{--
             data-kt-dropdown-placement="bottom-start" data-kt-dropdown-placement-rtl="bottom-end"
-            data-kt-dropdown-trigger="click">
-            <div class="cursor-pointer shrink-0" data-kt-dropdown-toggle="true">
-                <img alt="" class="size-9 rounded-full border-2 border-mono/25 shrink-0"
-                    src="assets/media/avatars/gray/5.png" />
+            data-kt-dropdown-trigger="click" --}}>
+            <div class="cursor-pointer shrink-0">
+                <div class="flex flex-row">
+                    <div class="kt-avatar">
+                        @let(nama = session.get('user.nama').trim().charAt(0))
+                        <div class="kt-avatar-fallback text-primary bg-primary/10">{{nama}}</div>
+                    </div>
+                    <div class="ms-2 p-1">
+                        <p class="text-sm text-foreground font-semibold">
+                            {{truncateString(session.get('user.nama'), 20)}}
+                        </p>
+                        <span class="text-xs font-normal">
+                            {{session.get('user.username')}}
+                        </span>
+                    </div>
+                </div>
             </div>
             <div class="kt-dropdown-menu w-[250px]" data-kt-dropdown-menu="true">
                 <div class="flex items-center justify-between px-2.5 py-1.5 gap-1.5">
@@ -555,11 +567,11 @@
         <!-- End of User -->
         <div class="flex items-center gap-1.5">
             <!-- Notifications -->
-            <button class="kt-btn kt-btn-ghost kt-btn-icon size-8 hover:bg-background hover:[&_i]:text-primary"
+            {{-- <button class="kt-btn kt-btn-ghost kt-btn-icon size-8 hover:bg-background hover:[&_i]:text-primary"
                 data-kt-drawer-toggle="#notifications_drawer">
                 <i class="ki-filled ki-notification-status text-lg">
                 </i>
-            </button>
+            </button> --}}
             <!--Notifications Drawer-->
             <div class="hidden kt-drawer kt-drawer-end card flex-col max-w-[90%] w-[450px] top-5 bottom-5 end-5 rounded-xl border border-border"
                 data-kt-drawer="true" data-kt-drawer-container="body" id="notifications_drawer">

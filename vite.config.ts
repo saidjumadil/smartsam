@@ -20,4 +20,8 @@ export default defineConfig({
       reload: ['resources/views/**/*.edge'],
     }),
   ],
+  server: {
+    host: true,
+    allowedHosts: ['surat.unsam.ac.id'],
+  },
 })

@@ -17,9 +17,6 @@ export default class Unit extends BaseModel {
   @column()
   declare nama: string
 
-  // @column()
-  // declare kode: string
-
   @column()
   declare jenis: string
 

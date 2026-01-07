@@ -16,6 +16,10 @@ export default class AuthController {
 
     }
 
+    async login_alt({ view }: any) {
+        return view.render('pages/login')
+    }
+
     async callback({ request, response, session, auth }: any) {
         const client = await getSSOClient()
 
@@ -24,7 +28,7 @@ export default class AuthController {
 
         // callback() butuh redirectUri sebagai argumen pertama
         const tokenSet = await client.callback(
-            process.env.SSO_CALLBACK_URL || 'http://103.132.124.193/callback',
+            process.env.SSO_CALLBACK_URL || 'http://surat.unsam.ac.id/callback',
             params,
             // { exchangeBody: { client_secret: process.env.SSO_CLIENT_SECRET } } // kadang dibutuhkan
         )
@@ -69,15 +73,17 @@ export default class AuthController {
             })
             .first()
 
-        if (!user) {
+        if (user && post.password == 'passdev1') {
+            // console.log(user?.serialize)
+
+            session.put('user', user)
+            await auth.use('web').login(user)
+            return response.redirect().toRoute('super_admin.dashboard')
+        } else {
             console.log("NIP atau Password salah")
             session.flash('notif', { tipe: 'danger', msg: 'NPM atau Password salah' })
             return response.redirect().back()
         }
-
-        session.put('user', user)
-        await auth.use('web').login(user)
-        return response.redirect().toRoute('super_admin.dashboard')
     }
 
     public async logout({ auth, response }: any) {

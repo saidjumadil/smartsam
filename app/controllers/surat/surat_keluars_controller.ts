@@ -59,11 +59,16 @@ export default class SuratKeluarsController {
                     .whereIn('status', ['aktif', 'plt'])
             })
             .preload('unitRel', (query) => {
-                query.select('id', 'nama', 'kode')
+                query.select('id', 'nama')
             })
             .first()
 
         const file = request.file('file')
+
+        if (pejabat?.penugasans.length == 0) {
+            session.flash('error', 'Data pejabat tidak ditemukan')
+            return response.redirect().back()
+        }
 
         const fileName = post.nomor_surat + '.' + file.extname
         const add = await Surat.create({

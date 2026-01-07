@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Surat Universitas Samudra - Sistem Persuratan Digital Terintegrasi</title>
+    <meta name="description"
+        content="E-Surat Universitas Samudra adalah sistem korespondensi elektronik terintegrasi untuk menyederhanakan proses administrasi akademik dan non-akademik secara aman dan efisien.">
+    <meta name="keywords"
+        content="E-Surat, Universitas Samudra, persuratan digital, administrasi kampus, surat elektronik">
+    <meta name="author" content="Universitas Samudra">
+    <link href="assets/media/app/favicon.ico" rel="shortcut icon" />
+    <link rel="canonical" href="https://esurat.unsam.ac.id">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="E-Surat Universitas Samudra">
+    <meta property="og:description"
+        content="Sistem persuratan digital terintegrasi untuk administrasi kampus yang aman dan efisien.">
+    <meta property="og:locale" content="id_ID">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --background: hsl(210, 20%, 98%);
+            --foreground: hsl(222, 47%, 11%);
+            --card: hsl(0, 0%, 100%);
+            --card-foreground: hsl(222, 47%, 11%);
+            --primary: hsl(217, 71%, 23%);
+            --primary-foreground: hsl(0, 0%, 100%);
+            --secondary: hsl(210, 40%, 96%);
+            --secondary-foreground: hsl(217, 71%, 23%);
+            --muted: hsl(210, 40%, 96%);
+            --muted-foreground: hsl(215, 16%, 47%);
+            --accent: hsl(43, 96%, 56%);
+            --accent-foreground: hsl(222, 47%, 11%);
+            --border: hsl(214, 32%, 91%);
+            --gold: hsl(43, 96%, 56%);
+            --gold-dark: hsl(43, 96%, 45%);
+            --navy: hsl(217, 71%, 23%);
+            --navy-light: hsl(217, 50%, 35%);
+            --navy-dark: hsl(217, 71%, 15%);
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Source Sans 3', sans-serif;
+            --shadow-subtle: 0 1px 3px 0 hsla(217, 71%, 23%, 0.04), 0 1px 2px -1px hsla(217, 71%, 23%, 0.04);
+            --shadow-card: 0 4px 6px -1px hsla(217, 71%, 23%, 0.05), 0 2px 4px -2px hsla(217, 71%, 23%, 0.05);
+            --shadow-elevated: 0 10px 15px -3px hsla(217, 71%, 23%, 0.08), 0 4px 6px -4px hsla(217, 71%, 23%, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--background);
+            color: var(--foreground);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--font-display);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                padding: 0 2rem;
+            }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background-color: hsla(0, 0%, 100%, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        @media (min-width: 640px) {
+            .header-inner {
+                height: 80px;
+            }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background-color: var(--primary);
+        }
+
+        .logo-icon svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary-foreground);
+        }
+
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--foreground);
+        }
+
+        @media (min-width: 640px) {
+            .logo-text {
+                font-size: 1.25rem;
+            }
+        }
+
+        .logo-subtitle {
+            display: none;
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+            margin-left: 0.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .logo-subtitle {
+                display: inline;
+            }
+        }
+
+        .nav {
+            display: none;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .nav {
+                display: flex;
+            }
+        }
+
+        .nav a {
+            color: var(--muted-foreground);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav a:hover {
+            color: var(--foreground);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--primary-foreground);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--navy-light);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: var(--secondary-foreground);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--muted);
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--foreground);
+        }
+
+        .btn-accent:hover {
+            opacity: 0.9;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 6rem 0 4rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background-color: hsla(0, 0%, 100%, 0.1);
+            border: 1px solid hsla(0, 0%, 100%, 0.2);
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            color: hsla(0, 0%, 100%, 0.9);
+            margin-bottom: 2rem;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--accent);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-foreground);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .hero h1 {
+                font-size: 4rem;
+            }
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-description {
+            max-width: 48rem;
+            margin: 0 auto 2.5rem;
+            font-size: 1.125rem;
+            color: hsla(0, 0%, 100%, 0.8);
+            line-height: 1.75;
+        }
+
+        @media (min-width: 640px) {
+            .hero-description {
+                font-size: 1.25rem;
+            }
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 4rem;
+        }
+
+        @media (min-width: 640px) {
+            .hero-buttons {
+                flex-direction: row;
+            }
+        }
+
+        .hero-buttons .btn {
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+        }
+
+        .hero-features {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            max-width: 48rem;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .hero-features {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background-color: hsla(0, 0%, 100%, 0.1);
+            border-radius: 12px;
+            border: 1px solid hsla(0, 0%, 100%, 0.1);
+        }
+
+        .hero-feature-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: hsla(43, 96%, 56%, 0.2);
+            flex-shrink: 0;
+        }
+
+        .hero-feature-icon svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent);
+        }
+
+        .hero-feature-text {
+            font-weight: 500;
+            color: var(--primary-foreground);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+            background-color: var(--background);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-subtitle {
+            display: inline-block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--foreground);
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .section-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        .section-description {
+            max-width: 42rem;
+            margin: 0 auto;
+            color: var(--muted-foreground);
+            font-size: 1.125rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .feature-card {
+            background-color: var(--card);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease-out;
+            box-shadow: var(--shadow-card);
+        }
+
+        .feature-card:hover {
+            box-shadow: var(--shadow-elevated);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background-color: var(--secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-icon svg {
+            width: 28px;
+            height: 28px;
+            color: var(--primary);
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-description {
+            color: var(--muted-foreground);
+            line-height: 1.6;
+        }
+
+        /* About Section */
+        .about {
+            padding: 5rem 0;
+            background-color: var(--secondary);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        @media (min-width: 1024px) {
+            .about-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .about-content {
+            max-width: 36rem;
+        }
+
+        .about-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--foreground);
+            margin-bottom: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .about-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        .about-description {
+            color: var(--muted-foreground);
+            font-size: 1.125rem;
+            line-height: 1.75;
+            margin-bottom: 2rem;
+        }
+
+        .benefits-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .benefit-icon {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            color: var(--accent);
+            margin-top: 2px;
+        }
+
+        .benefit-text {
+            color: var(--foreground);
+            font-weight: 500;
+        }
+
+        .stats-card {
+            background-color: var(--card);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-elevated);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 5rem 0;
+            background-color: var(--background);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        @media (min-width: 768px) {
+            .contact-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .contact-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .contact-card {
+            background-color: var(--card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease-out;
+        }
+
+        .contact-card:hover {
+            box-shadow: var(--shadow-elevated);
+            transform: translateY(-2px);
+        }
+
+        .contact-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: var(--secondary);
+            margin: 0 auto 1rem;
+        }
+
+        .contact-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--primary);
+        }
+
+        .contact-title {
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-value {
+            color: var(--muted-foreground);
+            font-size: 0.875rem;
+        }
+
+        .feedback-cta {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .feedback-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-foreground);
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .feedback-title {
+                font-size: 1.75rem;
+            }
+        }
+
+        .feedback-description {
+            color: hsla(0, 0%, 100%, 0.8);
+            max-width: 36rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--navy-dark);
+            color: var(--primary-foreground);
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        @media (min-width: 768px) {
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: 2fr 1fr 1fr 1fr;
+            }
+        }
+
+        .footer-brand {
+            max-width: 280px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 100%;
+            background-color: white;
+        }
+
+        .footer-logo-icon svg {
+            width: 20px;
+            height: 20px;
+            color: var(--foreground);
+        }
+
+        .footer-logo-text {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .footer-brand-description {
+            color: hsla(0, 0%, 100%, 0.7);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .footer-section-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-links a {
+            color: hsla(0, 0%, 100%, 0.7);
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-foreground);
+        }
+
+        .footer-contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            color: hsla(0, 0%, 100%, 0.7);
+            font-size: 0.875rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-contact-item svg {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid hsla(0, 0%, 100%, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .footer-bottom {
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+            }
+        }
+
+        .footer-copyright {
+            color: hsla(0, 0%, 100%, 0.6);
+            font-size: 0.875rem;
+        }
+
+        .footer-unit {
+            color: hsla(0, 0%, 100%, 0.6);
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+
+<body>
+    @let(email = 'admin.esurat@unsam.ac.id')
+    @let(telp = '+62 813-1011-1011')
+    @let(alamat = 'Jl. Meurandeh, Langsa Lama, Kota Langsa, Aceh 24416')
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-inner">
+            <div class="logo">
+                <img class="dark:hidden" style="height: 42px" src="assets/media/app/unsam.png" />
+                <div>
+                    <span class="logo-text">E-Surat</span>
+                    <span class="logo-subtitle">Universitas Samudra</span>
+                </div>
+            </div>
+
+            <nav class="nav">
+                <a href="#features">Fitur</a>
+                <a href="#about">Tentang</a>
+                <a href="#contact">Kontak</a>
+            </nav>
+
+            <a href="{{route('login')}}" class="btn btn-primary">Login</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="badge">
+                <span class="badge-dot"></span>
+                <span>Sistem Persuratan Digital</span>
+            </div>
+
+            <h1>E-Surat<br><span>Universitas Samudra</span></h1>
+
+            <p class="hero-description">
+                Sistem korespondensi elektronik terintegrasi yang dirancang untuk menyederhanakan
+                proses administrasi akademik dan non-akademik secara aman, efisien, dan terdokumentasi dengan baik.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="#features" class="btn btn-accent">Jelajahi Fitur</a>
+                <a href="#contact" class="btn btn-secondary">Hubungi Admin</a>
+            </div>
+
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <div class="hero-feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                            <path d="m9 12 2 2 4-4" />
+                        </svg>
+                    </div>
+                    <span class="hero-feature-text">Keamanan Terjamin</span>
+                </div>
+                <div class="hero-feature">
+                    <div class="hero-feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
+                        </svg>
+                    </div>
+                    <span class="hero-feature-text">Proses Cepat</span>
+                </div>
+                <div class="hero-feature">
+                    <div class="hero-feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4" />
+                            <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                            <path d="M2 15h10" />
+                            <path d="m9 18 3-3-3-3" />
+                        </svg>
+                    </div>
+                    <span class="hero-feature-text">Arsip Digital</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Fitur Unggulan</span>
+                <h2 class="section-title">Solusi Lengkap Persuratan Digital</h2>
+                <p class="section-description">
+                    Nikmati berbagai fitur canggih yang dirancang untuk memudahkan pengelolaan
+                    surat menyurat di lingkungan Universitas Samudra.
+                </p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                            <polyline points="14 2 14 8 20 8" />
+                            <line x1="16" x2="8" y1="13" y2="13" />
+                            <line x1="16" x2="8" y1="17" y2="17" />
+                            <line x1="10" x2="8" y1="9" y2="9" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Pengajuan Surat Digital</h3>
+                    <p class="feature-description">
+                        Ajukan berbagai jenis surat secara online tanpa perlu mengunjungi kantor administrasi secara
+                        langsung.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Pelacakan Real-time</h3>
+                    <p class="feature-description">
+                        Pantau status surat Anda secara langsung mulai dari pengajuan hingga selesai diproses.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Manajemen Disposisi</h3>
+                    <p class="feature-description">
+                        Kelola alur disposisi surat dengan mudah antar unit kerja di lingkungan universitas.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Arsip Terpusat</h3>
+                    <p class="feature-description">
+                        Simpan dan akses seluruh dokumen surat dalam satu sistem arsip digital yang terorganisir.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Notifikasi Otomatis</h3>
+                    <p class="feature-description">
+                        Terima pemberitahuan otomatis setiap ada pembaruan status atau tindakan pada surat Anda.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                            <path d="m9 12 2 2 4-4" />
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Sistem Terintegrasi</h3>
+                    <p class="feature-description">
+                    <p class="feature-description">
+                        Sistem yang terintegrasi sehingga memudahkan pengelolaan surat
+                        dan data menjadi lebih efektif dan efisien.
+                    </p>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <span class="section-subtitle">Tentang Sistem</span>
+                    <h2 class="about-title">Transformasi Digital Administrasi Kampus</h2>
+                    <p class="about-description">
+                        E-Surat Universitas Samudra hadir sebagai solusi modern untuk menjawab tantangan
+                        administrasi persuratan di era digital. Sistem ini dikembangkan untuk meningkatkan
+                        efisiensi, transparansi, dan akuntabilitas dalam pengelolaan dokumen.
+                    </p>
+                    <ul class="benefits-list">
+                        <li class="benefit-item">
+                            <svg class="benefit-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                <path d="m9 11 3 3L22 4" />
+                            </svg>
+                            <span class="benefit-text">Mengurangi penggunaan kertas dan biaya operasional</span>
+                        </li>
+                        <li class="benefit-item">
+                            <svg class="benefit-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                <path d="m9 11 3 3L22 4" />
+                            </svg>
+                            <span class="benefit-text">Mempercepat proses persetujuan dan distribusi surat</span>
+                        </li>
+                        <li class="benefit-item">
+                            <svg class="benefit-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                <path d="m9 11 3 3L22 4" />
+                            </svg>
+                            <span class="benefit-text">Memudahkan pencarian dan pengarsipan dokumen</span>
+                        </li>
+                        <li class="benefit-item">
+                            <svg class="benefit-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                                <path d="m9 11 3 3L22 4" />
+                            </svg>
+                            <span class="benefit-text">Meningkatkan keamanan dan kerahasiaan dokumen</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="stats-card">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">90%</div>
+                            <div class="stat-label">Lebih Efisien</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">24/7</div>
+                            <div class="stat-label">Akses Kapanpun</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">100%</div>
+                            <div class="stat-label">Digital</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Kontak</span>
+                <h2 class="section-title">Hubungi Kami</h2>
+                <p class="section-description">
+                    Butuh bantuan atau memiliki pertanyaan? Tim kami siap membantu Anda.
+                </p>
+            </div>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="16" x="2" y="4" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg>
+                    </div>
+                    <h3 class="contact-title">Email Administrator</h3>
+                    <p class="contact-value">{{email}}</p>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                        </svg>
+                    </div>
+                    <h3 class="contact-title">Telepon Kantor</h3>
+                    <p class="contact-value">{{telp}}</p>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                    </div>
+                    <h3 class="contact-title">Alamat Kampus</h3>
+                    <p class="contact-value">{{alamat}}</p>
+                </div>
+
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" />
+                            <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+                            <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
+                            <path d="M10 6h4" />
+                            <path d="M10 10h4" />
+                            <path d="M10 14h4" />
+                            <path d="M10 18h4" />
+                        </svg>
+                    </div>
+                    <h3 class="contact-title">Unit Pengelola</h3>
+                    <p class="contact-value">UPT Teknologi Informasi dan Komunikasi</p>
+                </div>
+            </div>
+
+            <div class="feedback-cta">
+                <h3 class="feedback-title">Kirimkan Masukan Anda</h3>
+                <p class="feedback-description">
+                    Kami sangat menghargai kritik, saran, dan masukan dari Anda untuk terus
+                    meningkatkan kualitas layanan E-Surat Universitas Samudra.
+                </p>
+                <a href="mailto:{{email}}?subject=Masukan%20E-Surat%20Unsam" class="btn btn-accent">
+                    Kirim Email Masukan
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">
+                            <img class="dark:hidden" style="height: 42px" src="assets/media/app/unsam.png" />
+
+                        </div>
+                        <span class="footer-logo-text">E-Surat</span>
+                    </div>
+                    <p class="footer-brand-description">
+                        Sistem persuratan digital terintegrasi untuk administrasi kampus yang aman,
+                        efisien, dan terdokumentasi dengan baik.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="footer-section-title">Navigasi</h4>
+                    <ul class="footer-links">
+                        <li><a href="#features">Fitur</a></li>
+                        <li><a href="#about">Tentang</a></li>
+                        <li><a href="#contact">Kontak</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-section-title">Kontak</h4>
+                    <div class="footer-contact-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="20" height="16" x="2" y="4" rx="2" />
+                            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                        </svg>
+                        <span>{{email}}</span>
+                    </div>
+                    <div class="footer-contact-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                        </svg>
+                        <span>{{telp}}</span>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="footer-section-title">Alamat</h4>
+                    <div class="footer-contact-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                            <circle cx="12" cy="10" r="3" />
+                        </svg>
+                        <span>{{alamat}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="footer-copyright">© 2024 E-Surat Universitas Samudra. Hak Cipta Dilindungi.</p>
+                <p class="footer-unit">Dikembangkan oleh UPT Teknologi Informasi dan Komunikasi</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', function () {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>

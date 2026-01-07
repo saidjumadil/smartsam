@@ -1,6 +1,6 @@
 import { BaseSeeder } from '@adonisjs/lucid/seeders'
 import integrasi_seeder from './list/integrasi_seeder.js'
-// import input_datum_seeder from './list/input_datum_seeder.js'
+import input_datum_seeder from './list/input_datum_seeder.js'
 
 export default class extends BaseSeeder {
   public static environment = ['development', 'production']
@@ -9,13 +9,13 @@ export default class extends BaseSeeder {
     console.log('▶ Running main seeder...')
     // Seeder yg kamu ingin jalankan
     const selected = [
+      'input_datum',
       'integrasi',
-      // 'input_datum'
     ]
 
     const map: Record<string, any> = {
+      input_datum: input_datum_seeder,
       integrasi: integrasi_seeder,
-      // input_datum: input_datum_seeder
     }
 
     for (const key of selected) {

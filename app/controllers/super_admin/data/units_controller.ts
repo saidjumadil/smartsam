@@ -22,7 +22,7 @@ export default class UnitsController {
 
     async put({ request, response, session, params }: any) {
         const post = request.all()
-        const unit = await Unit.query().where('id', params.id).update({ nama: post.nama, kode: post.kode })
+        const unit = await Unit.query().where('id', params.id).update({ nama: post.nama })
         if (unit) {
             session.flash('success', 'Data Berhasil Diubah')
             return response.redirect().back()

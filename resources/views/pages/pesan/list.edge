@@ -40,10 +40,12 @@
                                         data-kt-select-placeholder="Pilih Penerima"
                                         data-kt-select-config='{"displaySeparator": " | "}' required>
                                         @each(item in pejabat)
+                                        @if(item.penugasans.length > 0)
                                         <option value="{{item.penugasans[0].pejabatRel.id}}">
                                             {{item.penugasans[0].pejabatRel.username}} -
                                             {{item.penugasans[0].pejabatRel.nama}}
                                         </option>
+                                        @endif
                                         @end
                                     </select>
                                 </div>

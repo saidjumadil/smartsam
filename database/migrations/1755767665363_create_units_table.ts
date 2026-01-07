@@ -8,7 +8,6 @@ export default class extends BaseSchema {
       table.uuid('id').notNullable().unique().primary()
       table.integer('id_pusat', 3).unique()
       table.string('nama', 150)
-      // table.string('kode', 40).unique()
       table.string('jenis', 40)
       table.integer('id_induk').unsigned().references('units.id_pusat').onDelete('CASCADE').onUpdate('CASCADE')
 

@@ -7,6 +7,7 @@ import TrackSurat from "#models/track_surat"
 export default class DashboardController {
     async index({ view, session }: any) {
         const user = session.get('user')
+        console.log(user.penugasans[0].jabatanRel)
         const status_surat = await StatusSurat.query().select('id', 'status')
             .preload('surats', (query) => {
                 query.select('id').where('pejabat_pengirim', user.penugasans[0].id)
