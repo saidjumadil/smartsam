@@ -127,7 +127,7 @@ export default class SuratMasuksController {
             })
             .where('surat', params.id).orderBy('created_at', 'asc')
 
-        const units = await Unit.query().whereNot('id', user.penugasans[0].jabatanRel.unit).orderBy('id', 'asc')
+        const units = await Unit.query().whereNot('id', user.penugasans[0].jabatanRel.unit).andWhere('jenis', '!=', 'Subbagian').orderBy('id', 'asc')
         const anggotas = await Jabatan.query()
             .preload('penugasans', (query) => {
                 query.select('id', 'jabatan', 'pejabat')
@@ -160,9 +160,17 @@ export default class SuratMasuksController {
                     status: post.status,
                     dari: user.penugasans[0].id,
                     kepada: pimpinan?.penugasans[0].id,
-                    catatan: "Surat dipindahkan ke unit " + pimpinan?.unitRel.nama + " dengan catatan \"" + post.catatan + "\""
+                    catatan: "Surat dipindahkan ke unit " + pimpinan?.unitRel.nama + " dengan catatan \"" + post.catatan || "-" + "\""
                 })
-                await Surat.query().where('id', params.id).update({ status: post.status, pejabat_penerima: pimpinan?.penugasans[0].id })
+                await TrackSurat.create({
+                    surat: params.id,
+                    status: 1,
+                    dari: user.penugasans[0].id,
+                    kepada: pimpinan?.penugasans[0].id,
+                    catatan: "Surat telah dialihkan ke unit " + pimpinan?.unitRel.nama
+                })
+
+                await Surat.query().where('id', params.id).update({ status: 1, pejabat_penerima: pimpinan?.penugasans[0].id })
 
                 if (post.pimpinan != "on") {
                     session.flash('success', 'Data Berhasil Diubah')

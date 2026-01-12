@@ -88,6 +88,6 @@ export default class AuthController {
 
     public async logout({ auth, response }: any) {
         await auth.use('web').logout()
-        return response.redirect().toRoute('login')
+        return response.redirect().toRoute('landing')
     }
 }

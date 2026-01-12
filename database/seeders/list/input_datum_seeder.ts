@@ -34,13 +34,13 @@ export default class extends BaseSeeder {
     await StatusSurat.createMany([
       { status: "Surat Masuk" },
       { status: "Surat Diterima Admin" },
-      { status: "Disposisi Surat ke Pimpinan" },
+      { status: "Surat Dilanjutkan ke Pimpinan" },
       { status: "Surat Diterima Pimpinan" },
-      { status: "Surat Didisposisi Ke Unit Lain" },
-      { status: "Surat Didisposisi untuk ditindaklanjuti" },
-      { status: "Surat Sedang Diproses" },
       { status: "Surat Selesai" },
       { status: "Surat Ditolak" },
+      { status: "Surat Didisposisi Ke Unit Lain" },
+      { status: "Surat Ditindaklanjuti Ke Anggota" },
+      { status: "Surat Sedang Diproses" },
     ])
 
     // Jenis Surat

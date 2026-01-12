@@ -32,6 +32,10 @@ export default class extends BaseSeeder {
     //JABATAN
     const unit_pejabat: any = {
       1: 1,
+      2: 1,
+      3: 1,
+      4: 1,
+      5: 1,
       11: 2,
       12: 3,
       27: 4,
@@ -127,7 +131,8 @@ export default class extends BaseSeeder {
       222,
       2,
       3,
-      4
+      4,
+      5
     ]
     console.log("Membuat data jabatan")
     const jabatans = await axios.get(`${this.api}/api/external/jabatan`, {

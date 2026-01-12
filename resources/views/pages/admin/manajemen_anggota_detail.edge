@@ -155,13 +155,15 @@
             </div>
 
             <div class="col-span-2">
-                @let(role = session.get('user.penugasans[0].jabatan.role'))
+                @let(role = session.get('user.penugasans[0].jabatanRel.role'))
                 <div class="flex flex-col gap-2 mb-4">
-                    <button class="kt-btn kt-btn-mono kt-btn-lg  kt-btn-outline" data-kt-modal-toggle="#ganti_pimpinan">
+                    <button class="kt-btn kt-btn-mono kt-btn-lg kt-btn-outline {{role == 1 ? '' : 'hidden'}}"
+                        data-kt-modal-toggle="#ganti_pimpinan">
                         <i class="ki-filled ki-plus"></i>
                         Ganti Pimpinan
                     </button>
-                    <button class="kt-btn kt-btn-mono kt-btn-lg " data-kt-modal-toggle="#ganti_admin">
+                    <button class="kt-btn kt-btn-mono kt-btn-lg {{role == 3 ? '' : 'hidden'}}"
+                        data-kt-modal-toggle="#ganti_admin">
                         <i class="ki-filled ki-plus"></i>
                         Ganti Admin
                     </button>

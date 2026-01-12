@@ -58,12 +58,12 @@
                                                 <select class="kt-select" data-kt-select="true" name="status"
                                                     id="status" required>
                                                     @if(status == 2)
-                                                    <option value="3">Disposisi Ke Pimpinan</option>
+                                                    <option value="3">Lanjutkan Ke Pimpinan</option>
                                                     @elseif(status == 9)
                                                     <option value="5">Selesai</option>
                                                     @else
                                                     <option value="7">Disposisi Ke Unit Lain</option>
-                                                    <option value="8">Surat Didisposisi untuk ditindaklanjuti</option>
+                                                    <option value="8">Surat Ditindaklanjuti Oleh Anggota</option>
                                                     @endif
                                                     <option value="6">Ditolak</option>
                                                 </select>
@@ -71,7 +71,7 @@
                                             <div class="flex flex-row gap-2 mb-3 hidden" id="anggota">
                                                 <label for="" class="kt-label w-[100px]">Anggota Unit</label>
                                                 <select class="kt-select" data-kt-select="true"
-                                                    data-kt-select-enable-search="true" name="unit" id="unit"
+                                                    data-kt-select-enable-search="true" name="anggota" id="anggota"
                                                     data-kt-select-search-placeholder="Search..."
                                                     data-kt-select-placeholder="Pilih Anggota untuk tindak lanjutkan"
                                                     data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'
