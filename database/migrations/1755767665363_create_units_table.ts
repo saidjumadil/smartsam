@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.integer('id_pusat', 3).unique()
       table.string('nama', 150)
       table.string('jenis', 40)
-      table.integer('id_induk').unsigned().references('units.id_pusat').onDelete('CASCADE').onUpdate('CASCADE')
+      table.integer('id_induk')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

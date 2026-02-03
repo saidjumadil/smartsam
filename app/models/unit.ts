@@ -36,6 +36,12 @@ export default class Unit extends BaseModel {
   })
   declare unitRel: BelongsTo<typeof Unit>
 
+  @hasMany(() => Unit, {
+    foreignKey: 'id_induk',
+    localKey: 'id_pusat',
+  })
+  declare units: HasMany<typeof Unit>
+
   @beforeCreate()
   public static async assignUuid(unit: Unit) {
     unit.id = uuidv4()

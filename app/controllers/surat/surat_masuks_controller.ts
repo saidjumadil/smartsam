@@ -5,6 +5,7 @@ import JenisSurat from "#models/jenis_surat"
 import Surat from "#models/surat"
 import TrackSurat from "#models/track_surat"
 import Unit from "#models/unit"
+import UnitTreeService from "#services/UnitTreeService"
 
 export default class SuratMasuksController {
     async index({ view, session }: any) {
@@ -128,13 +129,16 @@ export default class SuratMasuksController {
             .where('surat', params.id).orderBy('created_at', 'asc')
 
         const units = await Unit.query().whereNot('id', user.penugasans[0].jabatanRel.unit).andWhere('jenis', '!=', 'Subbagian').orderBy('id', 'asc')
+        const tree = await UnitTreeService.getTree(user.penugasans[0].jabatanRel.unit)
+        console.log(user.penugasans[0].jabatanRel.unit, tree)
+
         const anggotas = await Jabatan.query()
             .preload('penugasans', (query) => {
                 query.select('id', 'jabatan', 'pejabat')
                     .preload('pejabatRel', (query) => {
                         query.select('username', 'nama')
                     }).where('status', 'aktif')
-            }).where('jabatans.unit', user.penugasans[0].jabatanRel.unit).andWhere('jabatans.role', 5).first()
+            }).whereIn('jabatans.unit', tree).andWhere('jabatans.role', 5).first()
 
         return view.render('pages/surat/surat_masuks_detail', { surat, track_surats, updateSurat, status, units, anggotas })
     }
@@ -173,7 +177,7 @@ export default class SuratMasuksController {
                 await Surat.query().where('id', params.id).update({ status: 1, pejabat_penerima: pimpinan?.penugasans[0].id })
 
                 if (post.pimpinan != "on") {
-                    session.flash('success', 'Data Berhasil Diubah')
+                    session.flash('alert', { type: 'success', msg: 'Surat Berhasil Dipindahkan' })
                     return response.redirect().toRoute('surat.surat_masuk.index')
                 } else post.status = 3
             case '3': //Disposisi
@@ -188,7 +192,7 @@ export default class SuratMasuksController {
 
                 await Surat.query().where('id', params.id).update({ status: post.status })
 
-                session.flash('success', 'Data Berhasil Diubah')
+                session.flash('alert', { type: 'success', msg: 'Surat Berhasil Disposisi' })
                 return response.redirect().toRoute('surat.surat_masuk.index')
             case '8': //Surat didisposisi ke anggota
                 console.log("Disposisi", post.status)
@@ -202,7 +206,7 @@ export default class SuratMasuksController {
 
                 await Surat.query().where('id', params.id).update({ status: post.status })
 
-                session.flash('success', 'Data Berhasil Diubah')
+                session.flash('alert', { type: 'success', msg: 'Surat Berhasil Dilanjutkan Ke Anggota' })
                 return response.redirect().toRoute('surat.surat_masuk.index')
             case '5':
             case '6': //Surat Ditolak dan Surat di terima
@@ -217,7 +221,7 @@ export default class SuratMasuksController {
                 })
                 await Surat.query().where('id', params.id).update({ status: post.status })
 
-                session.flash('success', 'Data Berhasil Diubah')
+                session.flash('alert', { type: 'success', msg: 'Surat Berhasil Ditolak' })
                 return response.redirect().toRoute('surat.surat_masuk.index')
         }
     }

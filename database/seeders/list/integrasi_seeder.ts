@@ -32,9 +32,9 @@ export default class extends BaseSeeder {
     //JABATAN
     const unit_pejabat: any = {
       1: 1,
-      2: 1,
-      3: 1,
-      4: 1,
+      2: 59,
+      3: 60,
+      4: 61,
       5: 1,
       11: 2,
       12: 3,
@@ -159,13 +159,13 @@ export default class extends BaseSeeder {
 
     for (const item of unit) {
       // console.log("Memproses jabatan", item.nama)
-      await Jabatan.updateOrCreate({ nama: `Admin Surat ${item.nama}` }, {
+      await Jabatan.updateOrCreate({ nama: `Admin Surat ${item.nama}`, unit: item.id }, {
         nama: `Admin Surat ${item.nama}`,
         role: 4,
         unit: item.id
       })
 
-      await Jabatan.updateOrCreate({ nama: `Anggota ${item.nama}` }, {
+      await Jabatan.updateOrCreate({ nama: `Anggota ${item.nama}`, unit: item.id }, {
         nama: `Anggota ${item.nama}`,
         role: 5,
         unit: item.id
@@ -180,16 +180,23 @@ export default class extends BaseSeeder {
 
     for (const item of users.data.data) { //Langsung tambah user
       // console.log("Memproses user", item.nama_lengkap)
-      const user = await User.updateOrCreate({ id_pusat: item.id_pegawai }, {
-        id_pusat: item.id_pegawai,
-        nama: item.nama_lengkap,
-        username: item.nip != null ? item.nip : item.ni_pppk,
-        email: item.email_kampus,
-      })
+      let user: any
+      try {
+        user = await User.updateOrCreate({ id_pusat: item.id_pegawai }, {
+          id_pusat: item.id_pegawai,
+          nama: item.nama_lengkap,
+          username: item.nip != null ? item.nip : item.ni_pppk,
+          email: item.email_kampus,
+        })
+      } catch (error) {
+        console.log("Error user", item)
+        console.log(error)
+        // break
+      }
 
-      if (item.id_jabatan != null) { //jika ada jabatan, langsung direlasikan
+      const jabatan = await Jabatan.findBy('id_pusat', item.id_jabatan)
+      if (item.id_jabatan != null && jabatan) { //jika ada jabatan, langsung direlasikan
         try {
-          const jabatan = await Jabatan.findBy('id_pusat', item.id_jabatan)
           // console.log("Memproses pejabat", item.nama_lengkap)
           // console.log(user.username, jabatan?.id, item.id_jabatan)
           await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: jabatan?.id }, {
@@ -199,31 +206,42 @@ export default class extends BaseSeeder {
           })
 
         } catch (error) {
+          console.log("Error pejabat", item, jabatan)
           console.log(error)
+          // break
         }
       }
-      else if (item.tipe_pegawai == "Tendik" && item.id_jabatan == null && item.id_unit != null) {
-        try {
-          // console.log("Memproses tendik", item.nama_lengkap)
-          const unit: any = await Unit.query().preload('jabatans', (query) => {
-            query.select('id').where('role', 5)
-          })
-            .where('id_pusat', item.id_unit)
-            .first()
+      else if (item.tipe_pegawai == "Tendik" && !jabatan && item.id_unit != null) {
+        // console.log("Memproses tendik", item.nama_lengkap)
+        const unit: any = await Unit.query().preload('jabatans', (query) => {
+          query.select('id').where('role', 5).orWhere('role', 4).orderBy('role', 'desc')
+        })
+          .where('id_pusat', item.id_unit)
+          .first()
 
-          const check = await Penugasan.findBy('pejabat', user.username)
-          if (check && check?.jabatan != unit.jabatans[0].id) {
+        const jabatan_ids = unit.jabatans.map((jabatan: any) => jabatan.id)
+        const check = await Penugasan.findBy('pejabat', user.username)
+        try {
+          if (check && !jabatan_ids.includes(check.jabatan)) {
             check.status = "Tidak Aktif"
             await check.save()
+            await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: unit.jabatans[0].id }, {
+              pejabat: user.username,
+              jabatan: unit.jabatans[0].id,
+              status: "aktif"
+            })
+          } else if (!check) {
+            await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: unit.jabatans[0].id }, {
+              pejabat: user.username,
+              jabatan: unit.jabatans[0].id,
+              status: "aktif"
+            })
           }
 
-          await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: unit.jabatans[0].id }, {
-            pejabat: user.username,
-            jabatan: unit.jabatans[0].id,
-            status: "aktif"
-          })
         } catch (error) {
+          console.log(unit)
           console.log(error)
+          break
         }
       }
     }

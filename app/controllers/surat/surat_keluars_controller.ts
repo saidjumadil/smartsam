@@ -45,7 +45,7 @@ export default class SuratKeluarsController {
             .orderBy('created_at', 'desc')
 
         const jenis_surats = await JenisSurat.query().orderBy('id', 'asc')
-        const units = await Unit.query().whereNot('id', user.penugasans[0].jabatanRel.unit).orderBy('id', 'asc')
+        const units = await Unit.query().whereNot('id', user.penugasans[0].jabatanRel.unit).andWhereNot('jenis', 'Subbagian').orderBy('id', 'asc')
         return view.render('pages/surat/surat_keluars', { surats, jenis_surats, units })
     }
 
@@ -66,7 +66,9 @@ export default class SuratKeluarsController {
         const file = request.file('file')
 
         if (pejabat?.penugasans.length == 0) {
-            session.flash('error', 'Data pejabat tidak ditemukan')
+            // console.log('Pejabat tidak tersedia')
+            const pejabat = post.pimpinan == 'on' ? 'Pimpinan Belum Terdaftar, Silahkan Hubungi Admin' : 'Admin Surat Belum ditentukan, Silahkan mengirim langsung ke Pimpinan Unit Atau Hubungi Unit Tersebut'
+            session.flash('alert', { type: 'destructive', msg: pejabat })
             return response.redirect().back()
         }
 
@@ -124,10 +126,10 @@ export default class SuratKeluarsController {
                 }
             }
 
-            session.flash('success', 'Data Berhasil Ditambahkan')
+            session.flash('alert', { type: 'success', msg: 'Data Berhasil Ditambahkan' })
             return response.redirect().toRoute('surat.surat_keluar.detail', { id: add.id })
         } else {
-            session.flash('error', 'Data Gagal Ditambahkan')
+            session.flash('alert', { type: 'destructive', msg: 'Data Gagal Ditambahkan' })
             return response.redirect().back()
         }
     }
