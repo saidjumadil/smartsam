@@ -22,6 +22,11 @@
         <div class="grid grid-cols-8 gap-4">
             {{-- Detail Surat --}}
             <div class="col-span-6 flex flex-col gap-4">
+                @flashMessage('alert')
+                <div class="mb-4">
+                    @!component('components/items/alert', {item: $message})
+                </div>
+                @end
                 <div class="kt-card kt-card-grid">
                     <div class="kt-card-header flex-wrap gap-2">
                         <h3 class="kt-card-title text-sm">

@@ -27,7 +27,8 @@
                             Detail Surat
                         </h3>
                         <div class="flex items-center flex-wrap gap-1.5 lg:gap-3.5">
-                            @if(updateSurat)
+                            @let(user = session.get('user'))
+                            @if(surat.pejabat_penerima == user.penugasans[0].id)
                             <button class="kt-btn" data-kt-modal-toggle="#modal">
                                 <i class="ki-filled ki-paper-plane"></i>
                                 Tindakan Surat
@@ -76,8 +77,11 @@
                                                     data-kt-select-placeholder="Pilih Anggota untuk tindak lanjutkan"
                                                     data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'
                                                     required>
-                                                    @each(item in anggotas.penugasans)
+                                                    <option value="0">Pilih Anggota</option>
+                                                    @each(i in anggotas)
+                                                    @each(item in i.penugasans)
                                                     <option value="{{item.id}}">{{item.pejabatRel.nama}}</option>
+                                                    @end
                                                     @end
                                                 </select>
                                             </div>

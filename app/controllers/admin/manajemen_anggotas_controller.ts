@@ -70,7 +70,7 @@ export default class ManajemenAnggotasController {
             .where('pejabat', post.pejabat).andWhereIn('status', ['aktif', 'plt']).first()
 
         if (cekPenugasan) {
-            session.flash('error', `Data Gagal Ditambahkan, Pejabat sedang bertugas sebagai ${cekPenugasan.jabatanRel.nama}`)
+            session.flash('alert', { type: 'destructive', msg: `Data Gagal Ditambahkan, Pejabat sedang bertugas sebagai ${cekPenugasan.jabatanRel.nama}` })
             return response.redirect().back()
         }
 
@@ -81,10 +81,10 @@ export default class ManajemenAnggotasController {
         })
 
         if (penugasan) {
-            session.flash('success', 'Data Berhasil Ditambahkan')
+            session.flash('alert', { type: 'success', msg: 'Data Berhasil Ditambahkan' })
             return response.redirect().back()
         } else {
-            session.flash('error', 'Data Gagal Ditambahkan')
+            session.flash('alert', { type: 'destructive', msg: 'Data Gagal Ditambahkan' })
             return response.redirect().back()
         }
     }
@@ -102,9 +102,9 @@ export default class ManajemenAnggotasController {
         })
 
         if (updatePenugasanLama && updatePenugasanBaru) {
-            session.flash('success', 'Data Berhasil Diubah')
+            session.flash('alert', { type: 'success', msg: 'Data Berhasil Diubah' })
         } else {
-            session.flash('error', 'Data Gagal Diubah')
+            session.flash('alert', { type: 'destructive', msg: 'Data Gagal Diubah' })
         }
         return response.redirect().back()
     }
@@ -139,9 +139,9 @@ export default class ManajemenAnggotasController {
         })
 
         if (updatePenugasanBaru) {
-            session.flash('success', 'Data Berhasil Diubah')
+            session.flash('alert', { type: 'success', msg: 'Data Berhasil Diubah' })
         } else {
-            session.flash('error', 'Data Gagal Diubah')
+            session.flash('alert', { type: 'destructive', msg: 'Data Gagal Diubah' })
         }
         return response.redirect().back()
     }

@@ -2,7 +2,7 @@ import Unit from '#models/unit'
 
 export default class UnitTreeService {
     static async getTree(rootId: any) {
-        const parent: any = await Unit.query().select('id', 'id_pusat').where('id', rootId).first()
+        const parent: any = await Unit.query().select('id', 'id_pusat', 'nama').where('id', rootId).first()
 
         let list: any[] = []
         list.push(parent.id)

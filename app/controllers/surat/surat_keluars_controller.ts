@@ -13,17 +13,10 @@ export default class SuratKeluarsController {
     async index({ view, session }: any) {
         const user = session.get('user')
 
-        const suratUnits = await Surat.query().select('surats.id')
-            .join('penugasans', 'surats.pejabat_pengirim', '=', 'penugasans.id')
-            .join('jabatans', 'penugasans.jabatan', '=', 'jabatans.id')
-            .where('jabatans.unit', user.penugasans[0].jabatanRel.unit)
-
-        const suratsId = suratUnits.map((surat) => surat.id)
-
         const surats = await Surat.query()
             // .whereIn('status', handleStatusSurat[user.penugasans[0].jabatanRel.role])
             .andWhere('arsipkan', false)
-            .andWhereIn('surats.id', suratsId)
+            .andWhere('pejabat_pengirim', user.penugasans[0].id)
             .preload('pengirimRel', (query) => {
                 query.select('id', 'jabatan', 'pejabat')
                     .preload('pejabatRel', (query) => {

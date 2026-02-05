@@ -10,23 +10,26 @@ import UnitTreeService from "#services/UnitTreeService"
 export default class SuratMasuksController {
     async index({ view, session }: any) {
         const user = session.get('user')
-        const handleStatusSurat: any = {
-            1: [1, 2, 3, 4, 5, 6, 7],
-            2: [1, 2, 3, 4, 5, 6, 7],
-            3: [3, 4, 5, 6, 9],
-            4: [1, 2, 5, 6, 7],
-            5: [5, 6, 8, 9]
-        }
+        // const handleStatusSurat: any = {
+        //     1: [1, 2, 3, 4, 5, 6, 7],
+        //     2: [1, 2, 3, 4, 5, 6, 7],
+        //     3: [3, 4, 5, 6, 9],
+        //     4: [1, 2, 5, 6, 7],
+        //     5: [5, 6, 8, 9]
+        // }
 
-        const suratUnits = await Surat.query().select('surats.id')
-            .join('penugasans', 'surats.pejabat_penerima', '=', 'penugasans.id')
-            .join('jabatans', 'penugasans.jabatan', '=', 'jabatans.id')
-            .where('jabatans.unit', user.penugasans[0].jabatanRel.unit)
+        // const suratUnits = await Surat.query().select('surats.id')
+        //     .join('penugasans', 'surats.pejabat_penerima', '=', 'penugasans.id')
+        //     .join('jabatans', 'penugasans.jabatan', '=', 'jabatans.id')
+        //     .where('jabatans.unit', user.penugasans[0].jabatanRel.unit)
 
-        const suratsId = suratUnits.map((surat) => surat.id)
+        const riwayats = await TrackSurat.query().distinct('surat')
+            .where('kepada', user.penugasans[0].id)
+
+        const suratsId = riwayats.map((surat) => surat.surat)
 
         const surats = await Surat.query()
-            .whereIn('status', handleStatusSurat[user.penugasans[0].jabatanRel.role])
+            // .whereIn('status', handleStatusSurat[user.penugasans[0].jabatanRel.role])
             .andWhere('arsipkan', false)
             .andWhereIn('surats.id', suratsId)
             .preload('pengirimRel', (query) => {
@@ -130,7 +133,6 @@ export default class SuratMasuksController {
 
         const units = await Unit.query().whereNot('id', user.penugasans[0].jabatanRel.unit).andWhere('jenis', '!=', 'Subbagian').orderBy('id', 'asc')
         const tree = await UnitTreeService.getTree(user.penugasans[0].jabatanRel.unit)
-        console.log(user.penugasans[0].jabatanRel.unit, tree)
 
         const anggotas = await Jabatan.query()
             .preload('penugasans', (query) => {
@@ -138,7 +140,7 @@ export default class SuratMasuksController {
                     .preload('pejabatRel', (query) => {
                         query.select('username', 'nama')
                     }).where('status', 'aktif')
-            }).whereIn('jabatans.unit', tree).andWhere('jabatans.role', 5).first()
+            }).whereIn('jabatans.unit', tree).andWhere('jabatans.role', 5)
 
         return view.render('pages/surat/surat_masuks_detail', { surat, track_surats, updateSurat, status, units, anggotas })
     }
@@ -190,7 +192,7 @@ export default class SuratMasuksController {
                     catatan: post.catatan
                 })
 
-                await Surat.query().where('id', params.id).update({ status: post.status })
+                await Surat.query().where('id', params.id).update({ status: post.status, pejabat_penerima: pimpinan?.penugasans[0].id })
 
                 session.flash('alert', { type: 'success', msg: 'Surat Berhasil Disposisi' })
                 return response.redirect().toRoute('surat.surat_masuk.index')
@@ -204,7 +206,7 @@ export default class SuratMasuksController {
                     catatan: post.catatan
                 })
 
-                await Surat.query().where('id', params.id).update({ status: post.status })
+                await Surat.query().where('id', params.id).update({ status: post.status, pejabat_penerima: post.anggota })
 
                 session.flash('alert', { type: 'success', msg: 'Surat Berhasil Dilanjutkan Ke Anggota' })
                 return response.redirect().toRoute('surat.surat_masuk.index')

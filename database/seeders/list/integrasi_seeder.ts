@@ -194,7 +194,7 @@ export default class extends BaseSeeder {
         // break
       }
 
-      const jabatan = await Jabatan.findBy('id_pusat', item.id_jabatan)
+      const jabatan = item.id_jabatan == null ? false : await Jabatan.findBy('id_pusat', item.id_jabatan)
       if (item.id_jabatan != null && jabatan) { //jika ada jabatan, langsung direlasikan
         try {
           // console.log("Memproses pejabat", item.nama_lengkap)
@@ -207,12 +207,11 @@ export default class extends BaseSeeder {
 
         } catch (error) {
           console.log("Error pejabat", item, jabatan)
-          console.log(error)
+          // console.log(error)
           // break
         }
       }
       else if (item.tipe_pegawai == "Tendik" && !jabatan && item.id_unit != null) {
-        // console.log("Memproses tendik", item.nama_lengkap)
         const unit: any = await Unit.query().preload('jabatans', (query) => {
           query.select('id').where('role', 5).orWhere('role', 4).orderBy('role', 'desc')
         })
@@ -239,8 +238,8 @@ export default class extends BaseSeeder {
           }
 
         } catch (error) {
-          console.log(unit)
-          console.log(error)
+          // console.log(unit)
+          // console.log(error)
           break
         }
       }
