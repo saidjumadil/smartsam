@@ -86,7 +86,7 @@ export default class SuratKeluarsController {
         await TrackSurat.create({
             surat: add.id,
             status: 1,
-            catatan: post.catatan,
+            catatan: "Surat Dikirimkan ke Unit " + pejabat?.unitRel.nama,
             kepada: pejabat?.penugasans[0].id,
             dari: user.penugasans[0].id
         })
@@ -95,7 +95,7 @@ export default class SuratKeluarsController {
             await TrackSurat.create({
                 surat: add.id,
                 status: 3,
-                catatan: "Surat dikirimkan langsung ke pimpinan unit tanpa melalui admin surat",
+                catatan: "Surat dikirimkan langsung ke pimpinan unit tanpa melalui admin surat ",
                 kepada: pejabat?.penugasans[0].id,
                 dari: user.penugasans[0].id
             })

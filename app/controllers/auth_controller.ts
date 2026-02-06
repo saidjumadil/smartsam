@@ -43,7 +43,7 @@ export default class AuthController {
                 query.select('id', 'pejabat', 'status', 'jabatan')
                     .whereIn('status', ['aktif', 'plt'])
                     .preload('jabatanRel', (query) => {
-                        query.select('id', 'unit', 'role')
+                        query.select('id', 'nama', 'unit', 'role')
                     })
             })
             .first()
@@ -68,7 +68,7 @@ export default class AuthController {
                 query.select('id', 'pejabat', 'status', 'jabatan')
                     .whereIn('status', ['aktif', 'plt'])
                     .preload('jabatanRel', (query) => {
-                        query.select('id', 'unit', 'role')
+                        query.select('id', 'unit', 'role', 'nama')
                     })
             })
             .first()

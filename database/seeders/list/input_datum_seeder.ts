@@ -46,16 +46,32 @@ export default class extends BaseSeeder {
     // Jenis Surat
     console.log("Mulai Membuat Data Jenis Surat")
     await JenisSurat.createMany([
-      { jenis: "KEMAHASISWAAN", kode: "KM" },
-      { jenis: "PERENCANAAN", kode: "PR" },
-      { jenis: "HUMAS", kode: "HM" },
-      { jenis: "KERJASAMA", kode: "KS" },
-      { jenis: "KURIKULUM AKADEMIK", kode: "KR" },
-      { jenis: "RUMAH TANGGA DAN BMN", kode: "RT" },
-      { jenis: "KEPEGAWAIAN", kode: "KP" },
-      { jenis: "KEUANGAN", kode: "KU" },
-      { jenis: "REKAPITULASI SURAT", kode: "TU" },
-      { jenis: "AKREDITASI", kode: "AK" }
+      { jenis: "Penerimaan Mahasiswa", kode: "TM" },
+      { jenis: "Kurikulum", kode: "KR" },
+      { jenis: "Tenaga Pendidik", kode: "TD" },
+      { jenis: "Kemahasiswaan", kode: "KM" },
+      { jenis: "Perkuliahan", kode: "PK" },
+      { jenis: "Data, Informasi dan Pengembangan Akademik", kode: "DI" },
+      { jenis: "Penunjang Akademik", kode: "TA" },
+      { jenis: "Penelitian", kode: "PT" },
+      { jenis: "Pengabdian Kepada Masyarakat", kode: "PM" },
+      { jenis: "Publikasi Jurnal/Buku", kode: "PJ" },
+      { jenis: "Wisuda dan Alumni", kode: "WA" },
+      { jenis: "Penjaminan Mutu", kode: "JM" },
+      { jenis: "Tata Pamong", kode: "TP" },
+      { jenis: "Perencanaan", kode: "PR" },
+      { jenis: "Hukum", kode: "HK" },
+      { jenis: "Organisasi dan Ketatalaksanaan", kode: "OT" },
+      { jenis: "Kearsipan", kode: "KA" },
+      { jenis: "Ketatausahaan", kode: "TU" },
+      { jenis: "Kerumahtanggaan", kode: "RT" },
+      { jenis: "Perlengkapan", kode: "LK" },
+      { jenis: "Hubungan Masyarakat", kode: "HM" },
+      { jenis: "Pendidikan dan Pelatihan", kode: "DL" },
+      { jenis: "Teknologi, Informasi dan Komunikasi", kode: "TI" },
+      { jenis: "Pengawasan", kode: "PA" },
+      { jenis: "Kepegawaian", kode: "KP" },
+      { jenis: "Keuangan", kode: "KU" },
     ])
 
     console.log("Selesai Membuat Data")

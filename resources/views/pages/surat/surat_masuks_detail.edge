@@ -125,16 +125,14 @@
                                             'Arsipkan',
                                             'Pesan Lainnya'
                                             ])
-                                            @if(session.get('user.penugasans[0].jabatan.role') == 3)
-                                            <div class="flex flex-row gap-2 mb-3">
+                                            <div class="flex flex-row gap-2 mb-3 hidden" id="bagianCatatan">
                                                 <label for="" class="kt-label w-[100px] align-top">Pesan</label>
                                                 <div class="w-full">
                                                     <select class="kt-select" data-kt-select="true"
                                                         data-kt-select-enable-search="true" name="catatan" id="catatan"
                                                         data-kt-select-search-placeholder="Search..."
                                                         data-kt-select-placeholder="Pilih Pesan Untuk Tindakan Surat"
-                                                        data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'
-                                                        required>
+                                                        data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'>
                                                         @each(item in opsi)
                                                         <option value="{{item}}">{{item}}</option>
                                                         @end
@@ -144,7 +142,6 @@
                                                         name="pesan" id="pesan"></textarea>
                                                 </div>
                                             </div>
-                                            @endif
                                         </div>
                                         <div class="kt-modal-footer">
                                             <div></div>
@@ -330,9 +327,31 @@
     const disposisi = document.getElementById("disposisi");
     const anggota = document.getElementById("anggota");
     const catatan = document.getElementById("catatan");
+    const bagianCatatan = document.getElementById("bagianCatatan");
     const pesan = document.getElementById("pesan");
 
     status.addEventListener("change", function () {
+        switch (status.value) {
+            case '5':
+            case '6':
+                bagianCatatan.classList.remove("hidden");
+                break;
+            case '7':
+                bagianCatatan.classList.remove("hidden");
+                anggota.classList.add("hidden");
+                disposisi.classList.remove("hidden");
+                break;
+            case '8':
+                bagianCatatan.classList.remove("hidden");
+                disposisi.classList.add("hidden");
+                anggota.classList.remove("hidden");
+                break;
+            default:
+                disposisi.classList.add("hidden");
+                bagianCatatan.classList.add("hidden");
+                anggota.classList.add("hidden");
+                break;
+        }
         if (status.value == 7) {
             anggota.classList.add("hidden");
             disposisi.classList.remove("hidden");

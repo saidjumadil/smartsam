@@ -24,7 +24,7 @@ export default class SuratMasuksController {
         //     .where('jabatans.unit', user.penugasans[0].jabatanRel.unit)
 
         const riwayats = await TrackSurat.query().distinct('surat')
-            .where('kepada', user.penugasans[0].id)
+            .where('kepada', user.penugasans[0].id).andWhereNot('dari', user.penugasans[0].id)
 
         const suratsId = riwayats.map((surat) => surat.surat)
 
@@ -33,6 +33,18 @@ export default class SuratMasuksController {
             .andWhere('arsipkan', false)
             .andWhereIn('surats.id', suratsId)
             .preload('pengirimRel', (query) => {
+                query.select('id', 'jabatan', 'pejabat')
+                    .preload('pejabatRel', (query) => {
+                        query.select('username', 'nama')
+                    })
+                    .preload('jabatanRel', (query) => {
+                        query.select('id', 'unit')
+                            .preload('unitRel', (query) => {
+                                query.select('id', 'nama')
+                            })
+                    })
+            })
+            .preload('penerimaRel', (query) => {
                 query.select('id', 'jabatan', 'pejabat')
                     .preload('pejabatRel', (query) => {
                         query.select('username', 'nama')
@@ -83,7 +95,7 @@ export default class SuratMasuksController {
             status: status,
             dari: user.penugasans[0].id,
             kepada: user.penugasans[0].id,
-            catatan: `Surat Masuk diterima oleh ${user.nama}`
+            catatan: `Surat Masuk diterima oleh ${user.penugasans[0].jabatanRel.nama} : ${user.nama}`
         })
 
         //Pasti update kalau status surat lebih rendah
@@ -157,16 +169,14 @@ export default class SuratMasuksController {
             .preload('unitRel', (query) => {
                 query.select('id', 'nama')
             }).first()
-        console.log(pimpinan?.serialize())
         switch (post.status) {
             case '7': //Surat didisposisikan ke Unit lain
-                console.log("Surat didisposisikan ke Unit lain", post.status)
                 await TrackSurat.create({
                     surat: params.id,
                     status: post.status,
                     dari: user.penugasans[0].id,
                     kepada: pimpinan?.penugasans[0].id,
-                    catatan: "Surat dipindahkan ke unit " + pimpinan?.unitRel.nama + " dengan catatan \"" + post.catatan || "-" + "\""
+                    catatan: "Surat dipindahkan ke unit " + pimpinan?.unitRel.nama + " dengan catatan \"" + post.pesan || post.catatan || "-" + "\""
                 })
                 await TrackSurat.create({
                     surat: params.id,
@@ -183,13 +193,12 @@ export default class SuratMasuksController {
                     return response.redirect().toRoute('surat.surat_masuk.index')
                 } else post.status = 3
             case '3': //Disposisi
-                console.log("Disposisi", post.status)
                 await TrackSurat.create({
                     surat: params.id,
                     status: post.status,
                     dari: user.penugasans[0].id,
                     kepada: pimpinan?.penugasans[0].id,
-                    catatan: post.catatan
+                    catatan: post.pesan || post.catatan
                 })
 
                 await Surat.query().where('id', params.id).update({ status: post.status, pejabat_penerima: pimpinan?.penugasans[0].id })
@@ -197,13 +206,12 @@ export default class SuratMasuksController {
                 session.flash('alert', { type: 'success', msg: 'Surat Berhasil Disposisi' })
                 return response.redirect().toRoute('surat.surat_masuk.index')
             case '8': //Surat didisposisi ke anggota
-                console.log("Disposisi", post.status)
                 await TrackSurat.create({
                     surat: params.id,
                     status: post.status,
                     dari: user.penugasans[0].id,
                     kepada: post.anggota,
-                    catatan: post.catatan
+                    catatan: post.pesan || post.catatan
                 })
 
                 await Surat.query().where('id', params.id).update({ status: post.status, pejabat_penerima: post.anggota })
@@ -219,9 +227,9 @@ export default class SuratMasuksController {
                     status: post.status,
                     dari: user.penugasans[0].id,
                     kepada: surat?.pejabat_pengirim,
-                    catatan: post.catatan
+                    catatan: post.pesan || post.catatan
                 })
-                await Surat.query().where('id', params.id).update({ status: post.status })
+                await Surat.query().where('id', params.id).update({ status: post.status, pejabat_penerima: surat?.pejabat_pengirim })
 
                 session.flash('alert', { type: 'success', msg: 'Surat Berhasil Ditolak' })
                 return response.redirect().toRoute('surat.surat_masuk.index')
