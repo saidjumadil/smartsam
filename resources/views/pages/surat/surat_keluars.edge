@@ -207,6 +207,15 @@
                                         <th>
                                             <span class="kt-table-col">
                                                 <span class="kt-table-col-label">
+                                                    Jenis Surat
+                                                </span>
+                                                <span class="kt-table-col-sort">
+                                                </span>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="kt-table-col">
+                                                <span class="kt-table-col-label">
                                                     Perihal
                                                 </span>
                                                 <span class="kt-table-col-sort">
@@ -217,6 +226,15 @@
                                             <span class="kt-table-col">
                                                 <span class="kt-table-col-label">
                                                     Unit Pengirim
+                                                </span>
+                                                <span class="kt-table-col-sort">
+                                                </span>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="kt-table-col">
+                                                <span class="kt-table-col-label">
+                                                    Tujuan Surat
                                                 </span>
                                                 <span class="kt-table-col-sort">
                                                 </span>
@@ -256,12 +274,23 @@
                                         <td class="text-foreground font-normal">
                                             {{item.jenisSuratRel.jenis}}
                                         </td>
+                                        <td class="text-foreground font-normal">
+                                            {{item.perihal}}
+                                        </td>
                                         <td>
                                             <p class="text-foreground font-normal">
                                                 {{item.pengirimRel.pejabatRel.nama}}
                                             </p>
                                             <span class="text-xs">
                                                 {{item.pengirimRel.jabatanRel.unitRel.nama}}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <p class="text-foreground font-normal">
+                                                {{item.penerimaRel.pejabatRel.nama}}
+                                            </p>
+                                            <span class="text-xs">
+                                                {{item.penerimaRel.jabatanRel.unitRel.nama}}
                                             </span>
                                         </td>
                                         <td class="text-foreground font-normal">

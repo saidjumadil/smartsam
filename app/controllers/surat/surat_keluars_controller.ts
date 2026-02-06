@@ -29,6 +29,18 @@ export default class SuratKeluarsController {
                             })
                     })
             })
+            .preload('penerimaRel', (query) => {
+                query.select('id', 'jabatan', 'pejabat')
+                    .preload('pejabatRel', (query) => {
+                        query.select('username', 'nama')
+                    })
+                    .preload('jabatanRel', (query) => {
+                        query.select('id', 'unit')
+                            .preload('unitRel', (query) => {
+                                query.select('id', 'nama')
+                            })
+                    })
+            })
             .preload('jenisSuratRel', (query) => {
                 query.select('id', 'jenis')
             })

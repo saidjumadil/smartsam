@@ -24,9 +24,9 @@ export default class SuratMasuksController {
         //     .where('jabatans.unit', user.penugasans[0].jabatanRel.unit)
 
         const riwayats = await TrackSurat.query().distinct('surat')
-            .where('kepada', user.penugasans[0].id).andWhereNot('dari', user.penugasans[0].id)
+            .where('kepada', user.penugasans[0].id).andWhereNotIn('status', [5, 6])
 
-        const suratsId = riwayats.map((surat) => surat.surat)
+        const suratsId = riwayats.map((surat: any) => surat.surat)
 
         const surats = await Surat.query()
             // .whereIn('status', handleStatusSurat[user.penugasans[0].jabatanRel.role])
