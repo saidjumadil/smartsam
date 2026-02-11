@@ -124,7 +124,74 @@
                                    </div>
                             </div>
                      </div>
-                     <div class="col-span-2"></div>
+                     <div class="col-span-2">
+                            <div class="kt-card">
+                                   <div class="kt-card-header">
+                                          <h3 class="kt-card-title">
+                                                 Surat Belum Ditindaklanjuti
+                                          </h3>
+                                   </div>
+                                   <div class="kt-card-table kt-scrollable-x-auto">
+                                          <table class="kt-table table-fixed">
+                                                 <thead>
+                                                        <tr>
+                                                               <th class="w-[60px] text-start">No. </th>
+                                                               <th class="text-start w-[100px]">
+                                                                      Surat
+                                                               </th>
+                                                               <th class="text-start ">
+                                                                      Pengirim
+                                                               </th>
+                                                               <th class="w-16">
+                                                               </th>
+                                                        </tr>
+                                                 </thead>
+                                                 <tbody>
+                                                        @each((item, index) in tindak)
+                                                        <tr>
+                                                               <td class="text-start font-medium">
+                                                                      <span
+                                                                             class="text-sm font-medium text-mono">{{index+1}}</span>
+                                                               </td>
+                                                               <td class="text-start flex flex-col">
+                                                                      <a class="text-sm font-medium text-mono hover:text-primary"
+                                                                             href="{{route('surat.surat_keluar.detail', {id:item.id})}}">
+                                                                             {{truncateString(item.nomor_surat)}}
+                                                                      </a>
+                                                                      <span class="text-xs text-secondary-foreground">
+                                                                             {{item.jenisSuratRel.jenis}}
+                                                                      </span>
+                                                               </td>
+                                                               <td class="text-xs text-secondary-foreground ">
+                                                                      <p class="text-foreground font-medium">
+                                                                             {{item.penerimaRel.pejabatRel.nama}}
+                                                                      </p>
+                                                                      <span class="text-xs">
+                                                                             {{item.penerimaRel.jabatanRel.unitRel.nama}}
+                                                                      </span>
+                                                               </td>
+                                                               <td class="text-start">
+                                                                      <div class="kt-menu" data-kt-menu="true">
+                                                                             <a href="{{route('surat.surat_keluar.detail', {id:item.id})}}"
+                                                                                    class="kt-menu-toggle kt-btn kt-btn-sm kt-btn-icon kt-btn-ghost">
+                                                                                    <i class="ki-filled ki-eye text-lg">
+                                                                                    </i>
+                                                                             </a>
+                                                                      </div>
+                                                               </td>
+                                                        </tr>
+                                                        @end
+                                                 </tbody>
+                                          </table>
+                                   </div>
+                                   <div class="kt-card-footer justify-center">
+                                          <a class="kt-link kt-link-underlined kt-link-dashed"
+                                                 href="{{route('surat.surat_masuk.index')}}">
+                                                 Lihat Surat Masuk
+                                          </a>
+                                   </div>
+                            </div>
+                     </div>
               </div>
        </div>
        <!-- End of Container -->

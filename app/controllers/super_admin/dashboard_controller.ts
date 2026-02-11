@@ -37,9 +37,31 @@ export default class DashboardController {
                         query.select('id', 'jenis')
                     })
             })
-
             .whereIn('surat', suratIds).orderBy('created_at', 'desc').limit(5)
 
-        return view.render('pages/super_admin/dashboard', { suratStatus, track_surats })
+        const tindak = await Surat.query()
+            .where('arsipkan', false)
+            .andWhere('pejabat_penerima', user.penugasans[0].id)
+            .preload('penerimaRel', (query) => {
+                query.select('id', 'jabatan', 'pejabat')
+                    .preload('pejabatRel', (query) => {
+                        query.select('username', 'nama')
+                    })
+                    .preload('jabatanRel', (query) => {
+                        query.select('id', 'unit')
+                            .preload('unitRel', (query) => {
+                                query.select('id', 'nama')
+                            })
+                    })
+            })
+            .preload('jenisSuratRel', (query) => {
+                query.select('id', 'jenis')
+            })
+            .orderBy('created_at', 'desc')
+            .limit(5)
+
+        console.log(tindak)
+
+        return view.render('pages/super_admin/dashboard', { suratStatus, track_surats, tindak })
     }
 }

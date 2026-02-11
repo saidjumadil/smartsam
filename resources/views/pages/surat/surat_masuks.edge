@@ -1,6 +1,38 @@
 @layout.app()
 @slot('main')
 <main class="grow" role="content">
+    <style>
+        .disko {
+            margin: 0;
+            animation: disco-bg 3s infinite linear;
+        }
+
+        @keyframes disco-bg {
+            0% {
+                background-color: red;
+            }
+
+            20% {
+                background-color: yellow;
+            }
+
+            40% {
+                background-color: lime;
+            }
+
+            60% {
+                background-color: cyan;
+            }
+
+            80% {
+                background-color: magenta;
+            }
+
+            100% {
+                background-color: red;
+            }
+        }
+    </style>
     <!-- Toolbar -->
     <div class="pb-5">
         <!-- Container -->
@@ -126,7 +158,8 @@
                                 </thead>
                                 <tbody>
                                     @each((item, index) in surats)
-                                    <tr>
+                                    <tr
+                                        class="{{session.get('user.penugasans[0].id') == item.pejabat_penerima ? 'bg-blue-100' : ''}}">
                                         <td class="text-center">
                                             {{index + 1}}
                                         </td>
