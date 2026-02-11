@@ -99,7 +99,7 @@ export default class SuratMasuksController {
         })
 
         //Pasti update kalau status surat lebih rendah
-        const updateSurat = await Surat.query().where('id', params.id).andWhere('status', '<=', status).update({ status: status }).first()
+        const updateSurat = await Surat.query().where('id', params.id).andWhere('status', '<=', status).andWhereNotIn('status', [5, 6]).update({ status: status }).first()
 
         const surat = await Surat.query().where('id', params.id)
             .preload('pengirimRel', (query) => {

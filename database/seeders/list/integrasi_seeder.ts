@@ -15,19 +15,36 @@ export default class extends BaseSeeder {
     console.log("Mulai Membuat Data Integrasi")
     // UNITS
     console.log("Membuat Data Unit")
+    // Variable Unit Super Admin dan admin umum
+    const unitAdmin: any = {}
+
     const units = await axios.get(`${this.api}/api/external/unit-kerja/flat`, {
       headers: this.header
     })
 
     for (const item of units.data.data) {
       console.log("Memproses unit", item.nama_unit)
-      await Unit.updateOrCreate({ id_pusat: item.id_unit }, {
+      const addUnit = await Unit.updateOrCreate({ id_pusat: item.id_unit }, {
         id_pusat: item.id_unit,
         nama: item.nama_unit,
         jenis: item.jenis_unit,
         id_induk: item.id_unit_induk
       })
+
+      switch (item.id_unit) {
+        case '19':
+          unitAdmin["superAdmin"] = addUnit.id
+          break;
+        case '15':
+          unitAdmin["adminUmum"] = addUnit.id
+          break;
+        default:
+          break;
+      }
+
     }
+
+    console.log("Item Unit", unitAdmin)
 
     //JABATAN
     const unit_pejabat: any = {
@@ -172,6 +189,20 @@ export default class extends BaseSeeder {
       })
     }
 
+    // Tambah Jabatan Super admin dan admin
+    await Jabatan.updateOrCreate({ id_pusat: 998 }, {
+      id_pusat: 998,
+      nama: 'Super Admin E-Surat',
+      role: 1,
+      unit: unitAdmin["superAdmin"]
+    })
+    await Jabatan.updateOrCreate({ id_pusat: 999 }, {
+      id_pusat: 999,
+      nama: 'Admin Umum E-Surat',
+      role: 2,
+      unit: unitAdmin["adminUmum"]
+    })
+
     // USERS
     console.log("Membuat data user")
     const users = await axios.get(`${this.api}/api/external/pegawai`, {
@@ -188,14 +219,24 @@ export default class extends BaseSeeder {
           username: item.nip != null ? item.nip : item.ni_pppk,
           email: item.email_kampus,
         })
+
+        switch (user.username) {
+          case '199305202025211067':
+            item.id_jabatan = 999
+            break;
+          case '199809062025061005':
+            item.id_jabatan = 998
+            break;
+        }
       } catch (error) {
-        console.log("Error user", item)
-        console.log(error)
+        // console.log("Error user", item)
+        // console.log(error)
         // break
       }
 
+
       const jabatan = item.id_jabatan == null ? false : await Jabatan.findBy('id_pusat', item.id_jabatan)
-      if (item.id_jabatan != null && jabatan) { //jika ada jabatan, langsung direlasikan
+      if (item.id_jabatan != null && jabatan) { //jika ada jabatan struktural, langsung direlasikan
         try {
           // console.log("Memproses pejabat", item.nama_lengkap)
           // console.log(user.username, jabatan?.id, item.id_jabatan)
@@ -203,6 +244,10 @@ export default class extends BaseSeeder {
             pejabat: user.username,
             jabatan: jabatan?.id || '',
             status: "aktif"
+          })
+
+          await Penugasan.query().where('pejabat', user.username).where('jabatan', '!=', jabatan?.id).update({
+            status: "tidak aktif"
           })
 
         } catch (error) {
