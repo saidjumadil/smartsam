@@ -162,12 +162,12 @@
             <div class="col-span-2">
                 @let(role = session.get('user.penugasans[0].jabatanRel.role'))
                 <div class="flex flex-col gap-2 mb-4">
-                    <button class="kt-btn kt-btn-mono kt-btn-lg kt-btn-outline {{role == 1 ? '' : 'hidden'}}"
-                        data-kt-modal-toggle="#ganti_pimpinan">
+                    <button class="kt-btn kt-btn-mono kt-btn-lg kt-btn-outline {{[1,2].includes(role) ? '' : 'hidden'}}"
+                        data-kt-modal-toggle="#ganti_pimpinan" {{jabatan[3] ? '' : 'disabled' }}>
                         <i class="ki-filled ki-plus"></i>
-                        Ganti Pimpinan
+                        {{jabatan[3] ? 'Ganti Pimpinan' : 'Pimpinan Belum Ada, Hubungi Admin'}}
                     </button>
-                    <button class="kt-btn kt-btn-mono kt-btn-lg {{role == 3 ? '' : 'hidden'}}"
+                    <button class="kt-btn kt-btn-mono kt-btn-lg {{[1,2,3].includes(role) ? '' : 'hidden'}}"
                         data-kt-modal-toggle="#ganti_admin">
                         <i class="ki-filled ki-plus"></i>
                         Ganti Admin
@@ -237,6 +237,7 @@
                                 </svg>
                             </button>
                         </div>
+                        @if(jabatan[3])
                         <form action="{{route('admin.manajemenAnggota.gantiPimpinan', {jabatan: jabatan[3]})}}"
                             method="post">
                             {{ csrfField() }}
@@ -270,6 +271,7 @@
                                 </div>
                             </div>
                         </form>
+                        @endif
                     </div>
                 </div>
                 <div class="kt-modal" data-kt-modal="true" id="ganti_admin">

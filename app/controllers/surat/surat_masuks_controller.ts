@@ -231,7 +231,7 @@ export default class SuratMasuksController {
                 })
                 await Surat.query().where('id', params.id).update({ status: post.status, pejabat_penerima: surat?.pejabat_pengirim })
 
-                session.flash('alert', { type: 'success', msg: 'Surat Berhasil Ditolak' })
+                session.flash('alert', { type: 'success', msg: 'Surat Berhasil ' + (post.status == 5 ? 'Ditolak' : 'Diterima') })
                 return response.redirect().toRoute('surat.surat_masuk.index')
         }
     }
