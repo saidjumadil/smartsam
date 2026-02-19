@@ -67,10 +67,11 @@ export default class SuratKeluarsController {
                 query.select('id', 'nama')
             })
             .first()
+        console.log(pejabat)
 
         const file = request.file('file')
 
-        if (pejabat?.penugasans.length == 0) {
+        if (pejabat?.penugasans.length == 0 || pejabat == null) {
             // console.log('Pejabat tidak tersedia')
             const pejabat = post.pimpinan == 'on' ? 'Pimpinan Belum Terdaftar, Silahkan Hubungi Admin' : 'Admin Surat Belum ditentukan, Silahkan mengirim langsung ke Pimpinan Unit Atau Hubungi Unit Tersebut'
             session.flash('alert', { type: 'destructive', msg: pejabat })
@@ -115,18 +116,18 @@ export default class SuratKeluarsController {
 
         if (add) {
             const lampirans = request.files('lampiran')
+            // return lampirans
             if (lampirans.length > 0) {
-                for (const lampiran of lampirans) {
-                    console.log(lampiran)
-                    const fileName = 'Lampiran_' + post.nomor_surat + '.' + lampiran.extname
-                    await lampiran.move(app.tmpPath(`uploads/surat/${add.id}`), {
+                for (const index in lampirans) {
+                    const fileName = 'Lampiran_' + '_' + (parseInt(index) + 1) + '_' + post.nomor_surat + '_' + lampirans[index].clientName + '.' + lampirans[index].extname
+                    await lampirans[index].move(app.tmpPath(`uploads/surat/${add.id}`), {
                         name: fileName,
                         overwrite: true
                     })
                     await Lampiran.create({
                         surat: add.id,
                         source: fileName,
-                        tipe: lampiran.type
+                        tipe: lampirans[index].type
                     })
                 }
             }

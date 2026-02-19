@@ -62,9 +62,16 @@ router.group(() => {
                 router.post('/delete/:id', '#controllers/super_admin/data/status_surats_controller.delete').as('delete')
             }).prefix('status-surat').as('status_surat')
         }).prefix('data').as('data')
+        //Manajemen Jabatan
+        router.group(() => {
+            router.get('/', '#controllers/super_admin/jabatans_controller.index').as('index')
+            router.post('/', '#controllers/super_admin/jabatans_controller.post').as('post')
+            router.post('/put/:id', '#controllers/super_admin/jabatans_controller.put').as('put')
+        }).prefix('jabatan').as('jabatan')
     }).prefix('admin').as('super_admin')
 
     //Admin
+    //Manajemen Anggota
     router.group(() => {
         router.get('/manajemen-anggota', '#controllers/admin/manajemen_anggotas_controller.index').as('manajemenAnggota')
         router.get('/manajemen-anggota/:id', '#controllers/admin/manajemen_anggotas_controller.detail').as('manajemenAnggota.detail')

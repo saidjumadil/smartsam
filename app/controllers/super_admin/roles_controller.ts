@@ -15,7 +15,7 @@ export default class RolesController {
                     })
             })
             .preload('unitRel', (query) => {
-                query.select('nama')
+                query.select('nama', 'jenis')
             })
             .where('role', params.id)
         // console.log(jabatans[0].penugasans[0].pejabatRel.username)
