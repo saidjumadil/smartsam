@@ -52,9 +52,14 @@ edge.global('tanggal', (tanggal: any) => {
 })
 
 edge.global('time', (tanggal: any) => {
-    const hour = ('0' + tanggal.getHours()).slice(-2)
-    const minute = ('0' + (tanggal.getMinutes())).slice(-2)
-    return `${hour}:${minute}`
+    const date = new Date(tanggal)
+
+    const formatted = new Intl.DateTimeFormat('id-ID', {
+        timeZone: 'Asia/Jakarta',
+        hour: '2-digit',
+        minute: '2-digit'
+    }).format(date)
+    return formatted
 })
 
 edge.global('hari', (index: any) => { return hari[index] })

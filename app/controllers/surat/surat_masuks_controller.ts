@@ -135,7 +135,19 @@ export default class SuratMasuksController {
             })
             .where('surat', params.id).orderBy('created_at', 'asc')
 
-        const units = await Unit.query().whereNot('id', user.penugasans[0].jabatanRel.unit).andWhere('jenis', '!=', 'Subbagian').orderBy('id', 'asc')
+        const units = await Unit.query()
+            .whereNot('id', user.penugasans[0].jabatanRel.unit)
+            .andWhere('jenis', '!=', 'Subbagian')
+            .preload('jabatans', (query) => {
+                query.select('id', 'unit', 'role').where('role', 3)
+                    .preload('penugasans', (query) => {
+                        query.select('jabatan', 'pejabat').where('status', 'aktif')
+                            .preload('pejabatRel', (query) => {
+                                query.select('username', 'nama')
+                            })
+                    })
+            })
+            .orderBy('id', 'asc')
         const tree = await UnitTreeService.getTree(user.penugasans[0].jabatanRel.unit)
 
         const anggotas = await Jabatan.query()

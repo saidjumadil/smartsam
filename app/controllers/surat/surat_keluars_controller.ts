@@ -3,6 +3,7 @@
 import Jabatan from "#models/jabatan"
 import JenisSurat from "#models/jenis_surat"
 import Lampiran from "#models/lampiran"
+import Penugasan from "#models/penugasan"
 import Surat from "#models/surat"
 import TrackSurat from "#models/track_surat"
 import Unit from "#models/unit"
@@ -12,11 +13,13 @@ export default class SuratKeluarsController {
 
     async index({ view, session }: any) {
         const user = session.get('user')
+        const penugasans = await Penugasan.query().select('id', 'pejabat').where('pejabat', user.username)
+        const pejabatId = penugasans.map((penugasan: any) => penugasan.id)
 
         const surats = await Surat.query()
             // .whereIn('status', handleStatusSurat[user.penugasans[0].jabatanRel.role])
             .andWhere('arsipkan', false)
-            .andWhere('pejabat_pengirim', user.penugasans[0].id)
+            .andWhereIn('pejabat_pengirim', pejabatId)
             .preload('pengirimRel', (query) => {
                 query.select('id', 'jabatan', 'pejabat')
                     .preload('pejabatRel', (query) => {
@@ -50,7 +53,21 @@ export default class SuratKeluarsController {
             .orderBy('created_at', 'desc')
 
         const jenis_surats = await JenisSurat.query().orderBy('id', 'asc')
-        const units = await Unit.query().whereNot('id', user.penugasans[0].jabatanRel.unit).andWhereNot('jenis', 'Subbagian').orderBy('id', 'asc')
+        // const units = await Unit.query().whereNot('id', user.penugasans[0].jabatanRel.unit).andWhereNot('jenis', 'Subbagian').orderBy('id', 'asc')
+        const units = await Unit.query()
+            .whereNot('id', user.penugasans[0].jabatanRel.unit)
+            .andWhere('jenis', '!=', 'Subbagian')
+            .preload('jabatans', (query) => {
+                query.select('id', 'unit', 'role').where('role', 3)
+                    .preload('penugasans', (query) => {
+                        query.select('jabatan', 'pejabat').where('status', 'aktif')
+                            .preload('pejabatRel', (query) => {
+                                query.select('username', 'nama')
+                            })
+                    })
+            })
+            .orderBy('id', 'asc')
+
         return view.render('pages/surat/surat_keluars', { surats, jenis_surats, units })
     }
 
