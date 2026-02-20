@@ -2,6 +2,7 @@
 
 import Jabatan from "#models/jabatan"
 import JenisSurat from "#models/jenis_surat"
+import Penugasan from "#models/penugasan"
 import Surat from "#models/surat"
 import TrackSurat from "#models/track_surat"
 import Unit from "#models/unit"
@@ -10,26 +11,16 @@ import UnitTreeService from "#services/UnitTreeService"
 export default class SuratMasuksController {
     async index({ view, session }: any) {
         const user = session.get('user')
-        // const handleStatusSurat: any = {
-        //     1: [1, 2, 3, 4, 5, 6, 7],
-        //     2: [1, 2, 3, 4, 5, 6, 7],
-        //     3: [3, 4, 5, 6, 9],
-        //     4: [1, 2, 5, 6, 7],
-        //     5: [5, 6, 8, 9]
-        // }
 
-        // const suratUnits = await Surat.query().select('surats.id')
-        //     .join('penugasans', 'surats.pejabat_penerima', '=', 'penugasans.id')
-        //     .join('jabatans', 'penugasans.jabatan', '=', 'jabatans.id')
-        //     .where('jabatans.unit', user.penugasans[0].jabatanRel.unit)
+        const penugasans = await Penugasan.query().select('id', 'pejabat').where('pejabat', user.username)
+        const pejabatId = penugasans.map((penugasan: any) => penugasan.id)
 
         const riwayats = await TrackSurat.query().distinct('surat')
-            .where('kepada', user.penugasans[0].id).andWhereNotIn('status', [5, 6])
+            .whereIn('kepada', pejabatId).andWhereNotIn('status', [5, 6])
 
         const suratsId = riwayats.map((surat: any) => surat.surat)
 
         const surats = await Surat.query()
-            // .whereIn('status', handleStatusSurat[user.penugasans[0].jabatanRel.role])
             .andWhere('arsipkan', false)
             .andWhereIn('surats.id', suratsId)
             .preload('pengirimRel', (query) => {
@@ -87,21 +78,10 @@ export default class SuratMasuksController {
                 break;
         }
 
-        // Update Status
-        await TrackSurat.updateOrCreate({
-            surat: params.id,
-            status: status,
-        }, {
-            status: status,
-            dari: user.penugasans[0].id,
-            kepada: user.penugasans[0].id,
-            catatan: `Surat Masuk diterima oleh ${user.penugasans[0].jabatanRel.nama} : ${user.nama}`
-        })
-
         //Pasti update kalau status surat lebih rendah
         const updateSurat = await Surat.query().where('id', params.id).andWhere('status', '<=', status).andWhereNotIn('status', [5, 6]).update({ status: status }).first()
 
-        const surat = await Surat.query().where('id', params.id)
+        const surat: any = await Surat.query().where('id', params.id)
             .preload('pengirimRel', (query) => {
                 query.select('id', 'jabatan', 'pejabat')
                     .preload('pejabatRel', (query) => {
@@ -124,6 +104,18 @@ export default class SuratMasuksController {
                 query.select('*')
             })
             .first()
+
+        if (![5, 6].includes(surat?.status)) {
+            await TrackSurat.updateOrCreate({
+                surat: params.id,
+                status: status,
+            }, {
+                status: status,
+                dari: user.penugasans[0].id,
+                kepada: user.penugasans[0].id,
+                catatan: `Surat Masuk diterima oleh ${user.penugasans[0].jabatanRel.nama} : ${user.nama}`
+            })
+        }
 
         const track_surats = await TrackSurat.query().select('kepada', 'status', 'catatan', 'created_at')
             .preload('kepadaRel', (query) => {

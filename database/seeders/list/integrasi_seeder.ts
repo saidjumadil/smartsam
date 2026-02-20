@@ -311,7 +311,7 @@ export default class extends BaseSeeder {
         const check = await Penugasan.findBy('pejabat', user.username)
         try {
           if (check && !jabatan_ids.includes(check.jabatan)) {
-            check.status = "Tidak Aktif"
+            check.status = "tidak aktif"
             await check.save()
             await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: unit.jabatans[0].id }, {
               pejabat: user.username,

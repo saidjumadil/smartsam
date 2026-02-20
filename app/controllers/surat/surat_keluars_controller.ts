@@ -119,7 +119,7 @@ export default class SuratKeluarsController {
             // return lampirans
             if (lampirans.length > 0) {
                 for (const index in lampirans) {
-                    const fileName = 'Lampiran_' + '_' + (parseInt(index) + 1) + '_' + post.nomor_surat + '_' + lampirans[index].clientName + '.' + lampirans[index].extname
+                    const fileName = 'Lampiran_' + '_' + (parseInt(index) + 1) + '_' + post.nomor_surat + '_' + lampirans[index].clientName
                     await lampirans[index].move(app.tmpPath(`uploads/surat/${add.id}`), {
                         name: fileName,
                         overwrite: true
