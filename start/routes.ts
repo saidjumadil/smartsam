@@ -104,4 +104,6 @@ router.group(() => {
     }).prefix('pesan').as('pesan')
 
 }).use(middleware.auth())
+
 router.get('/api/notif-surat-masuk/:id', '#controllers/api_controller.notifSuratMasuk').as('notifSuratMasuk')
+router.get('/api/notif-pesan-masuk/:id', '#controllers/api_controller.notifPesanMasuk').as('notifPesanMasuk')

@@ -98,8 +98,12 @@ edge.global('tipeStatus', (tipe: any) => {
 })
 
 edge.global('notifSuratMasuk', async (id: any) => {
-    // console.log(id, `${env.get('APP_URL')}/api/notif-surat-masuk/${id}`)
     const jumlah = await axios.get(`${env.get('APP_URL')}/api/notif-surat-masuk/${id}`)
+    return jumlah.data
+})
+
+edge.global('notifPesanMasuk', async (id: any) => {
+    const jumlah = await axios.get(`${env.get('APP_URL')}/api/notif-pesan-masuk/${id}`)
     return jumlah.data
 })
 

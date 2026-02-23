@@ -267,7 +267,7 @@
                             class="kt-menu-title text-sm text-foreground font-medium kt-menu-item-here:text-mono kt-menu-item-show:text-mono kt-menu-link-hover:text-mono">
                             Surat Masuk
                         </span>
-                        @let(user = await notifSuratMasuk(session.get('user.penugasans[0].id')))
+                        @let(user = await notifSuratMasuk(session.get('user.username')))
                         @if(user)
                         <div class="kt-badge kt-badge-primary w-4 h-4">{{user}}
                         </div>
@@ -306,6 +306,11 @@
                             class="kt-menu-title text-sm text-foreground font-medium kt-menu-item-here:text-mono kt-menu-item-show:text-mono kt-menu-link-hover:text-mono">
                             Pesan
                         </span>
+                        @let(pesan = await notifPesanMasuk(session.get('user.id')))
+                        @if(pesan)
+                        <div class="kt-badge kt-badge-primary w-4 h-4">{{pesan}}
+                        </div>
+                        @endif
                     </a>
                 </div>
                 @endif

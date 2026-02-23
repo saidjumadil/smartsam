@@ -1,16 +1,27 @@
 // import type { HttpContext } from '@adonisjs/core/http'
 
+import Partisipan from "#models/partisipan"
 import Penugasan from "#models/penugasan"
 import Surat from "#models/surat"
 
 export default class ApiController {
     async notifSuratMasuk({ params }: any) {
-        const penugasan = await Penugasan.query()
-            .preload('jabatanRel', (query) => {
-                query.select('id', 'role')
-            }).where('id', params.id).first()
-        // console.log(penugasan?.jabatanRel.role)
-        const jumlahSuratMasuk = await Surat.query().where('status', penugasan?.jabatanRel.role == 4 ? 1 : 3).andWhere('pejabat_penerima', params.id).count('*').first()
-        return jumlahSuratMasuk?.$extras.count
+        const penugasans = await Penugasan.query().select('id', 'pejabat').where('pejabat', params.id)
+        const pejabatId = penugasans.map((penugasan: any) => penugasan.id)
+
+        const riwayats = await Surat.query().select('id').whereIn('pejabat_penerima', pejabatId).andWhere('arsipkan', false).andWhereNotIn('status', [5, 6])
+        return riwayats.length
+    }
+
+    async notifPesanMasuk({ params }: any) {
+        const partisipan = await Partisipan.query()
+            .select('partisipans.conversation', 'dibacas.pesan')
+            .leftJoin('pesans', 'pesans.conversation', '=', 'partisipans.conversation')
+            .leftJoin('dibacas', (query) => {
+                query.on('pesans.id', '=', 'dibacas.pesan').andOnVal('dibacas.user', params.id)
+            })
+            .where('partisipans.user', params.id)
+        const dibaca = partisipan.reduce((sum, pesan) => sum + (pesan.$extras.pesan === null ? 1 : 0), 0)
+        return dibaca
     }
 }

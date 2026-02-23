@@ -45,7 +45,6 @@ export default class PesansController {
                     })
             })
             .where('role', 3)
-        console.log(pejabat)
         return view.render('pages/pesan/list', { conversations, pejabat })
     }
 
