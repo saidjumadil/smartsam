@@ -136,13 +136,11 @@
                                                  <thead>
                                                         <tr>
                                                                <th class="w-[60px] text-start">No. </th>
-                                                               <th class="text-start w-[100px]">
+                                                               <th class="text-start w-[150px]">
                                                                       Surat
                                                                </th>
                                                                <th class="text-start ">
                                                                       Pengirim
-                                                               </th>
-                                                               <th class="w-16">
                                                                </th>
                                                         </tr>
                                                  </thead>
@@ -156,7 +154,7 @@
                                                                <td class="text-start flex flex-col">
                                                                       <a class="text-sm font-medium text-mono hover:text-primary"
                                                                              href="{{route('surat.surat_keluar.detail', {id:item.id})}}">
-                                                                             {{truncateString(item.nomor_surat)}}
+                                                                             {{truncateString(item.nomor_surat, 10)}}
                                                                       </a>
                                                                       <span class="text-xs text-secondary-foreground">
                                                                              {{item.jenisSuratRel.jenis}}
@@ -169,15 +167,6 @@
                                                                       <span class="text-xs">
                                                                              {{item.penerimaRel.jabatanRel.unitRel.nama}}
                                                                       </span>
-                                                               </td>
-                                                               <td class="text-start">
-                                                                      <div class="kt-menu" data-kt-menu="true">
-                                                                             <a href="{{route('surat.surat_keluar.detail', {id:item.id})}}"
-                                                                                    class="kt-menu-toggle kt-btn kt-btn-sm kt-btn-icon kt-btn-ghost">
-                                                                                    <i class="ki-filled ki-eye text-lg">
-                                                                                    </i>
-                                                                             </a>
-                                                                      </div>
                                                                </td>
                                                         </tr>
                                                         @end

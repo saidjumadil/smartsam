@@ -7,7 +7,6 @@ import User from "#models/user"
 export default class ManajemenAnggotasController {
     async index({ view, session, response }: any) {
         const user = session.get('user')
-        console.log(user.penugasans[0].jabatanRel)
         if (user.penugasans[0].jabatanRel.role == 1) {
             const units = await Unit.query().orderBy('id', 'asc')
             return view.render('pages/admin/manajemen_anggotas', { units })
@@ -20,7 +19,7 @@ export default class ManajemenAnggotasController {
         const unit: any = await Unit.query()
             .select('id', 'nama')
             .preload('jabatans', (query) => {
-                query.select('id', 'nama', 'role', 'unit')
+                query.select('id', 'nama', 'role', 'unit').orderBy('role', 'asc')
                     .preload('penugasans', (query) => {
                         query.select('id', 'pejabat', 'jabatan', 'status').whereIn('status', ['aktif', 'plt'])
                             .preload('pejabatRel', (query) => {
@@ -28,22 +27,25 @@ export default class ManajemenAnggotasController {
                             })
                     })
             })
-            .where('id', params.id).first()
+            .where('id', params.id)
         const jabatan: any = {}
-        unit.jabatans.forEach((item: any) => {
-            jabatan[item.role] = item.id
+
+        unit[0].jabatans.forEach((item: any) => {
+            if (!jabatan[item.role]) {
+                jabatan[item.role] = []
+            }
+            jabatan[item.role].push(item.id)
         })
-        console.log(unit.jabatans[0].penugasans)
 
         const anggota = await Penugasan.query()
             .preload('pejabatRel', (query) => {
                 query.select('username', 'nama')
             })
-            .where('jabatan', jabatan[5])
+            .whereIn('jabatan', jabatan[5])
             .where('status', '!=', 'tidak aktif')
 
         const users = await User.all()
-        return view.render('pages/admin/manajemen_anggota_detail', { unit, jabatan, users, anggota })
+        return view.render('pages/admin/manajemen_anggota_detail', { unit: unit[0], jabatan, users, anggota })
     }
 
     //Hapus Anggota

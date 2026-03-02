@@ -135,7 +135,7 @@ export default class SuratMasuksController {
             })
             .where('surat', params.id).orderBy('created_at', 'asc')
 
-        const units = await Unit.query()
+        const unit_lain = await Unit.query()
             .whereNot('id', user.penugasans[0].jabatanRel.unit)
             .andWhere('jenis', '!=', 'Subbagian')
             .preload('jabatans', (query) => {
@@ -149,6 +149,10 @@ export default class SuratMasuksController {
             })
             .orderBy('id', 'asc')
         const tree = await UnitTreeService.getTree(user.penugasans[0].jabatanRel.unit)
+        const unit_bawahan = await Unit.query().whereIn('id', tree).andWhereNot('id', user.penugasans[0].jabatanRel.unit).orderBy('id', 'asc')
+
+        const units = unit_lain.concat(unit_bawahan)
+        console.log(unit_bawahan)
 
         const anggotas = await Jabatan.query()
             .preload('penugasans', (query) => {
@@ -164,6 +168,9 @@ export default class SuratMasuksController {
     async put({ request, response, session, params }: any) {
         const post = request.all()
         const user = session.get('user')
+        if (post.status == 3) {
+            post.pimpinan = 'on'
+        }
         const pimpinan = await Jabatan.query().select('id', 'unit', 'role')
             .where('unit', post.status == 7 ? post.unit : user.penugasans[0].jabatanRel.unit).andWhere('role', post.pimpinan == 'on' ? 3 : 4)
             .preload('penugasans', (query) => {
@@ -173,6 +180,7 @@ export default class SuratMasuksController {
             .preload('unitRel', (query) => {
                 query.select('id', 'nama')
             }).first()
+        console.log(post, pimpinan)
         switch (post.status) {
             case '7': //Surat didisposisikan ke Unit lain
                 await TrackSurat.create({

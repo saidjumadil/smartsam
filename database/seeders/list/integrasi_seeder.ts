@@ -49,9 +49,100 @@ export default class extends BaseSeeder {
     //JABATAN
     const unit_pejabat: any = {
       1: 1,
-      5: 1,
       11: 2,
+      115: 19,
+      116: 20,
+      117: 21,
+      118: 22,
+      119: 65,
       12: 3,
+      120: 69,
+      121: 66,
+      15: 16,
+      18: 25,
+      181: 73,
+      19: 89,
+      2: 59,
+      20: 90,
+      22: 32,
+      220: 17,
+      221: 23,
+      222: 56,
+      227: 80,
+      228: 81,
+      229: 82,
+      230: 69,
+      231: 65,
+      232: 66,
+      233: 67,
+      234: 68,
+      240: 78,
+      241: 76,
+      242: 77,
+      243: 43,
+      244: 79,
+      245: 70,
+      246: 71,
+      249: 83,
+      250: 84,
+      251: 72,
+      252: 73,
+      253: 74,
+      257: 49,
+      259: 109,
+      260: 110,
+      3: 60,
+      31: 28,
+      32: 106,
+      33: 107,
+      34: 108,
+      35: 55,
+      37: 54,
+      39: 50,
+      4: 61,
+      41: 51,
+      43: 55,
+      44: 54,
+      45: 51,
+      46: 51,
+      47: 64,
+      49: 24,
+      5: 1,
+      50: 102,
+      51: 103,
+      52: 104,
+      53: 85,
+      55: 31,
+      57: 87,
+      59: 30,
+      60: 31,
+      61: 29,
+      62: 27,
+      69: 92,
+      70: 93,
+      71: 26,
+      72: 97,
+      73: 99,
+      74: 100,
+      75: 94,
+      76: 32,
+      77: 44,
+      78: 45,
+      79: 46,
+      80: 42,
+      81: 35,
+      82: 34,
+      83: 38,
+      84: 33,
+      85: 41,
+      86: 36,
+      87: 40,
+      88: 39,
+      89: 37,
+      90: 53,
+      91: 47,
+      92: 48,
+      93: 52,
       27: 4,
       206: 5,
       200: 6,
@@ -64,68 +155,47 @@ export default class extends BaseSeeder {
       183: 13,
       211: 15,
       999: 15,
-      15: 16,
-      220: 17,
-      115: 19,
+      16: 16,
+      8: 18,
+      9: 18,
       998: 19,
-      116: 20,
-      117: 21,
-      118: 22,
-      221: 23,
-      49: 24,
-      18: 25,
-      71: 26,
-      62: 27,
-      31: 28,
-      61: 29,
-      59: 30,
-      60: 31,
-      76: 32,
-      84: 33,
-      82: 34,
-      81: 35,
-      86: 36,
-      89: 37,
-      83: 38,
-      88: 39,
-      87: 40,
-      85: 41,
-      80: 42,
-      77: 44,
-      78: 45,
-      79: 46,
-      91: 47,
-      92: 48,
-      45: 51,
-      93: 52,
-      90: 53,
-      44: 54,
-      43: 55,
-      222: 56,
-      2: 59,
-      3: 60,
-      4: 61,
-      47: 64,
-      119: 65,
-      121: 66,
-      120: 69,
-      181: 73,
-      53: 85,
-      57: 87,
-      19: 89,
-      20: 90,
-      69: 92,
-      70: 93,
-      75: 94,
-      72: 97,
-      73: 99,
-      74: 100,
-      50: 102,
-      51: 103,
-      52: 104,
-      32: 106,
-      33: 107,
-      34: 108,
+      188: 24,
+      190: 24,
+      189: 24,
+      184: 25,
+      185: 25,
+      186: 25,
+      258: 25,
+      197: 26,
+      198: 26,
+      204: 26,
+      187: 27,
+      191: 27,
+      192: 27,
+      203: 28,
+      202: 28,
+      201: 28,
+      56: 31,
+      40: 50,
+      42: 51,
+      38: 54,
+      36: 55,
+      48: 64,
+      236: 65,
+      165: 66,
+      237: 66,
+      238: 67,
+      239: 68,
+      164: 69,
+      235: 69,
+      122: 69,
+      247: 70,
+      248: 71,
+      254: 72,
+      255: 73,
+      256: 74,
+      54: 85,
+      58: 87,
     }
 
     const pimpinan = [
@@ -142,21 +212,61 @@ export default class extends BaseSeeder {
       15,
       18,
       181,
+      182,
+      183,
       19,
       2,
       20,
+      200,
+      206,
+      209,
+      210,
+      211,
+      212,
+      213,
+      214,
+      22,
       220,
       221,
       222,
+      227,
+      228,
+      229,
+      230,
+      231,
+      232,
+      233,
+      234,
+      240,
+      241,
+      242,
+      243,
+      244,
+      245,
+      246,
+      249,
+      250,
+      251,
+      252,
+      253,
+      257,
+      259,
+      260,
+      27,
       3,
       31,
       32,
       33,
       34,
+      35,
+      37,
+      39,
       4,
+      41,
       43,
       44,
       45,
+      46,
       47,
       49,
       5,
@@ -164,6 +274,7 @@ export default class extends BaseSeeder {
       51,
       52,
       53,
+      55,
       57,
       59,
       60,
@@ -180,6 +291,7 @@ export default class extends BaseSeeder {
       77,
       78,
       79,
+      8,
       80,
       81,
       82,
@@ -195,6 +307,7 @@ export default class extends BaseSeeder {
       92,
       93,
     ]
+
     console.log("Membuat data jabatan")
     const jabatans = await axios.get(`${this.api}/api/external/jabatan`, {
       headers: this.header
@@ -280,10 +393,15 @@ export default class extends BaseSeeder {
 
 
       const jabatan = item.id_jabatan == null ? false : await Jabatan.findBy('id_pusat', item.id_jabatan)
+
       if (item.id_jabatan != null && jabatan) { //jika ada jabatan struktural, langsung direlasikan
         try {
           // console.log("Memproses pejabat", item.nama_lengkap)
           // console.log(user.username, jabatan?.id, item.id_jabatan)
+          await Penugasan.query().where('jabatan', jabatan?.id).where('pejabat', '!=', user.username).update({
+            status: "tidak aktif"
+          })
+
           await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: jabatan?.id }, {
             pejabat: user.username,
             jabatan: jabatan?.id || '',
@@ -295,33 +413,45 @@ export default class extends BaseSeeder {
           })
 
         } catch (error) {
-          console.log("Error pejabat", item, jabatan)
+          // console.log("Error pejabat", item, jabatan)
           // console.log(error)
           // break
         }
       }
       else if (item.tipe_pegawai == "Tendik" && !jabatan && item.id_unit != null) {
+
         const unit: any = await Unit.query().preload('jabatans', (query) => {
           query.select('id').where('role', 5).orWhere('role', 4).orderBy('role', 'desc')
         })
           .where('id_pusat', item.id_unit)
-          .first()
 
-        const jabatan_ids = unit.jabatans.map((jabatan: any) => jabatan.id)
-        const check = await Penugasan.findBy('pejabat', user.username)
+        const jabatan_ids = unit[0].jabatans.map((jabatan: any) => jabatan.id)
+        const check: any = await Penugasan.query().where('pejabat', user.username).andWhere('status', 'aktif').first()
+        const jabatan_anggota: any = await Jabatan.query().where('unit', unit[0].id).andWhereILike('nama', 'Anggota %').first()
+        const jabatan_admin: any = await Jabatan.query().where('unit', unit[0].id).andWhereILike('nama', 'Admin Surat %').first()
+
         try {
-          if (check && !jabatan_ids.includes(check.jabatan)) {
+          if (check && !jabatan_ids.includes(check.jabatan)) { //Check ada penugasan, tapi bukan di unit yang sama
             check.status = "tidak aktif"
             await check.save()
-            await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: unit.jabatans[0].id }, {
+            await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: jabatan_anggota.id }, {
               pejabat: user.username,
-              jabatan: unit.jabatans[0].id,
+              jabatan: jabatan_anggota.id,
               status: "aktif"
             })
-          } else if (!check) {
-            await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: unit.jabatans[0].id }, {
+          } else if (![jabatan_anggota.id, jabatan_admin.id].includes(check.jabatan)) {
+            check.status = "tidak aktif"
+            await check.save()
+            await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: jabatan_anggota.id }, {
               pejabat: user.username,
-              jabatan: unit.jabatans[0].id,
+              jabatan: jabatan_anggota.id,
+              status: "aktif"
+            })
+          }
+          else if (!check) {
+            await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: jabatan_anggota.id }, {
+              pejabat: user.username,
+              jabatan: jabatan_anggota.id,
               status: "aktif"
             })
           }
