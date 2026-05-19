@@ -87,6 +87,7 @@ router.group(() => {
             router.get('/', '#controllers/surat/surat_masuks_controller.index').as('index')
             router.get('/:id', '#controllers/surat/surat_masuks_controller.detail').as('detail')
             router.post('/:id', '#controllers/surat/surat_masuks_controller.put').as('put')
+            router.post('/arsip/:id', '#controllers/surat/surat_masuks_controller.arsip').as('arsip')
         }).prefix('surat-masuk').as('surat_masuk')
 
         router.group(() => {

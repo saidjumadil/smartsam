@@ -41,6 +41,7 @@ export default class extends BaseSeeder {
       { status: "Surat Didisposisi Ke Unit Lain" },
       { status: "Surat Ditindaklanjuti Ke Anggota" },
       { status: "Surat Sedang Diproses" },
+      { status: "Surat Diarsipkan" },
     ])
 
     // Jenis Surat

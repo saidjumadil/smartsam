@@ -85,6 +85,7 @@ edge.global('tipeStatus', (tipe: any) => {
         case 7:
         case 8:
         case 9:
+        case 10:
             tipe = 'primary'
             break
         case 5:

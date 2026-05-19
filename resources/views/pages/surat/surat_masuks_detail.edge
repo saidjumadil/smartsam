@@ -26,8 +26,41 @@
                         <h3 class="kt-card-title">
                             Detail Surat
                         </h3>
+                        @let(user = session.get('user'))
                         <div class="flex items-center flex-wrap gap-1.5 lg:gap-3.5">
-                            @let(user = session.get('user'))
+                            {{-- arsip berlaku jika ketua dan surat sudah selesai atau ditolak --}}
+                            @if(user.penugasans[0].jabatanRel.role == 3 && [5,6].includes(surat.status))
+                            <button class="kt-btn kt-btn-destructive" data-kt-modal-toggle="#modalArsip">
+                                <i class="ki-filled ki-archive"></i>
+                                Arsipkan Surat
+                            </button>
+                            <div class="kt-modal" data-kt-modal="true" id="modalArsip">
+                                <div class="kt-modal-content pt-7.5 my-[3%] kt-container-fixed px-5 overflow-hidden"
+                                    style="max-width: 900px;">
+                                    <form action="{{route('surat.surat_masuk.arsip', {id: surat.id})}}" method="post">
+                                        {{ csrfField() }}
+                                        <div class="kt-modal-body grid gap-y-3 text-center">
+                                            <div class="p-4 rounded-lg bg-[#f8fafc] border border-[#e2e8f0]">
+                                                <p class="text-2xl font-semibold">Konfirmasi Arsipkan Surat</p>
+                                                <p class="mt-2 text-base text-muted-foreground">Apakah Anda yakin ingin
+                                                    mengarsipkan surat ini? Tindakan ini akan memindahkan surat ke arsip
+                                                    dan tidak dapat dikembalikan kecuali melalui proses khusus.</p>
+                                            </div>
+                                        </div>
+                                        <div class="kt-modal-footer justify-center">
+                                            <div class="flex gap-4 justify-center">
+                                                <button type="button" class="kt-btn kt-btn-secondary"
+                                                    data-kt-modal-dismiss="#modalArsip">
+                                                    Batal</button>
+                                                <button type="submit"
+                                                    class="kt-btn kt-btn-destructive">Arsipkan</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            @endif
+
                             @if(surat.pejabat_penerima == user.penugasans[0].id)
                             <button class="kt-btn" data-kt-modal-toggle="#modal">
                                 <i class="ki-filled ki-paper-plane"></i>

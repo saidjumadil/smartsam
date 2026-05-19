@@ -366,8 +366,10 @@ export default class extends BaseSeeder {
       headers: this.header
     })
 
+    let index = 0
     for (const item of users.data.data) { //Langsung tambah user
       // console.log("Memproses user", item.nama_lengkap)
+      index++
       let user: any
       try {
         user = await User.updateOrCreate({ id_pusat: item.id_pegawai }, {
@@ -376,7 +378,6 @@ export default class extends BaseSeeder {
           username: item.nip != null ? item.nip : item.ni_pppk,
           email: item.email_kampus,
         })
-
         switch (user.username) {
           case '199305202025211067':
             item.id_jabatan = 999
@@ -393,6 +394,7 @@ export default class extends BaseSeeder {
 
 
       const jabatan = item.id_jabatan == null ? false : await Jabatan.findBy('id_pusat', item.id_jabatan)
+
 
       if (item.id_jabatan != null && jabatan) { //jika ada jabatan struktural, langsung direlasikan
         try {
@@ -431,24 +433,26 @@ export default class extends BaseSeeder {
         const jabatan_admin: any = await Jabatan.query().where('unit', unit[0].id).andWhereILike('nama', 'Admin Surat %').first()
 
         try {
-          if (check && !jabatan_ids.includes(check.jabatan)) { //Check ada penugasan, tapi bukan di unit yang sama
-            check.status = "tidak aktif"
-            await check.save()
-            await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: jabatan_anggota.id }, {
-              pejabat: user.username,
-              jabatan: jabatan_anggota.id,
-              status: "aktif"
-            })
-          } else if (![jabatan_anggota.id, jabatan_admin.id].includes(check.jabatan)) {
-            check.status = "tidak aktif"
-            await check.save()
-            await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: jabatan_anggota.id }, {
-              pejabat: user.username,
-              jabatan: jabatan_anggota.id,
-              status: "aktif"
-            })
+          if (check) {
+            if (!jabatan_ids.includes(check.jabatan)) { //Check ada penugasan, tapi bukan di unit yang sama
+              check.status = "tidak aktif"
+              await check.save()
+              await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: jabatan_anggota.id }, {
+                pejabat: user.username,
+                jabatan: jabatan_anggota.id,
+                status: "aktif"
+              })
+            } else if (![jabatan_anggota.id, jabatan_admin.id].includes(check.jabatan)) {
+              check.status = "tidak aktif"
+              await check.save()
+              await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: jabatan_anggota.id }, {
+                pejabat: user.username,
+                jabatan: jabatan_anggota.id,
+                status: "aktif"
+              })
+            }
           }
-          else if (!check) {
+          else {
             await Penugasan.updateOrCreate({ pejabat: user.username, jabatan: jabatan_anggota.id }, {
               pejabat: user.username,
               jabatan: jabatan_anggota.id,
@@ -459,7 +463,7 @@ export default class extends BaseSeeder {
         } catch (error) {
           // console.log(unit)
           // console.log(error)
-          break
+          // break
         }
       }
     }

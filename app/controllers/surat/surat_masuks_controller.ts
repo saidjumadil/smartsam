@@ -62,10 +62,15 @@ export default class SuratMasuksController {
 
     async detail({ view, session, params }: any) {
         const user = session.get('user')
+        const status_surat = await Surat.query().select('id', 'status').where('id', params.id).first()
         let status
         switch (user.penugasans[0].jabatanRel.role) {
             case 4:
-                status = 2;
+                if (status_surat?.status == 8) {
+                    status = 9;
+                } else {
+                    status = 2;
+                }
                 break;
             case 3:
                 status = 4;
@@ -160,7 +165,7 @@ export default class SuratMasuksController {
                     .preload('pejabatRel', (query) => {
                         query.select('username', 'nama')
                     }).where('status', 'aktif')
-            }).whereIn('jabatans.unit', tree).andWhere('jabatans.role', 5)
+            }).whereIn('jabatans.unit', tree).andWhereIn('jabatans.role', [4, 5])
 
         return view.render('pages/surat/surat_masuks_detail', { surat, track_surats, updateSurat, status, units, anggotas })
     }
@@ -245,6 +250,25 @@ export default class SuratMasuksController {
 
                 session.flash('alert', { type: 'success', msg: 'Surat Berhasil ' + (post.status == 5 ? 'Ditolak' : 'Diterima') })
                 return response.redirect().toRoute('surat.surat_masuk.index')
+        }
+    }
+
+    async arsip({ response, session, params }: any) {
+        const user = session.get('user')
+        const surat = await Surat.query().where('id', params.id).update({ arsipkan: true })
+        await TrackSurat.create({
+            surat: params.id,
+            status: 10,
+            dari: user.penugasans[0].id,
+            kepada: user.penugasans[0].id,
+            catatan: `Surat diarsipkan oleh ${user.penugasans[0].jabatanRel.nama} : ${user.nama}`
+        })
+        if (surat) {
+            session.flash('alert', { type: 'success', msg: 'Surat Berhasil Diarsipkan' })
+            return response.redirect().toRoute('surat.surat_masuk.index')
+        } else {
+            session.flash('alert', { type: 'danger', msg: 'Gagal Mengarsipkan Surat' })
+            return response.redirect().back()
         }
     }
 }
