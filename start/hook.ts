@@ -89,7 +89,7 @@ edge.global('tipeStatus', (tipe: any) => {
             tipe = 'primary'
             break
         case 5:
-            tipe = 'success'
+            tipe = 'green-500'
             break
         case 6:
             tipe = 'destructive'

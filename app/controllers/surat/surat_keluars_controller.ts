@@ -182,14 +182,27 @@ export default class SuratKeluarsController {
             })
             .first()
 
-        const track_surats = await TrackSurat.query().select('kepada', 'status', 'catatan', 'created_at')
+        const track_surats = await TrackSurat.query().select('kepada', 'dari', 'status', 'catatan', 'created_at')
             .preload('kepadaRel', (query) => {
                 query.select('id', 'jabatan', 'pejabat')
                     .preload('pejabatRel', (query) => {
                         query.select('username', 'nama')
                     })
                     .preload('jabatanRel', (query) => {
-                        query.select('id', 'unit')
+                        query.select('id', 'nama', 'unit')
+                            .preload('unitRel', (query) => {
+                                query.select('id', 'nama')
+                            })
+
+                    })
+            })
+            .preload('dariRel', (query) => {
+                query.select('id', 'jabatan', 'pejabat')
+                    .preload('pejabatRel', (query) => {
+                        query.select('username', 'nama')
+                    })
+                    .preload('jabatanRel', (query) => {
+                        query.select('id', 'nama', 'unit')
                             .preload('unitRel', (query) => {
                                 query.select('id', 'nama')
                             })
@@ -200,6 +213,10 @@ export default class SuratKeluarsController {
             })
             .where('surat', params.id).orderBy('created_at', 'asc')
 
-        return view.render('pages/surat/surat_keluars_detail', { surat, track_surats })
+        const catatan = track_surats
+            .filter((item: any) => [1, 5, 6, 7, 8].includes(item.status))
+            .map((item: any) => item)
+
+        return view.render('pages/surat/surat_keluars_detail', { surat, track_surats, catatan })
     }
 }

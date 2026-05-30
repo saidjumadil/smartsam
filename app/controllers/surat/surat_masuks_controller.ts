@@ -6,7 +6,7 @@ import Penugasan from "#models/penugasan"
 import Surat from "#models/surat"
 import TrackSurat from "#models/track_surat"
 import Unit from "#models/unit"
-import UnitTreeService from "#services/UnitTreeService"
+// import UnitTreeService from "#services/UnitTreeService"
 
 export default class SuratMasuksController {
     async index({ view, session }: any) {
@@ -122,14 +122,27 @@ export default class SuratMasuksController {
             })
         }
 
-        const track_surats = await TrackSurat.query().select('kepada', 'status', 'catatan', 'created_at')
+        const track_surats = await TrackSurat.query().select('kepada', 'dari', 'status', 'catatan', 'created_at')
             .preload('kepadaRel', (query) => {
                 query.select('id', 'jabatan', 'pejabat')
                     .preload('pejabatRel', (query) => {
                         query.select('username', 'nama')
                     })
                     .preload('jabatanRel', (query) => {
-                        query.select('id', 'unit')
+                        query.select('id', 'nama', 'unit')
+                            .preload('unitRel', (query) => {
+                                query.select('id', 'nama')
+                            })
+
+                    })
+            })
+            .preload('dariRel', (query) => {
+                query.select('id', 'jabatan', 'pejabat')
+                    .preload('pejabatRel', (query) => {
+                        query.select('username', 'nama')
+                    })
+                    .preload('jabatanRel', (query) => {
+                        query.select('id', 'nama', 'unit')
                             .preload('unitRel', (query) => {
                                 query.select('id', 'nama')
                             })
@@ -139,6 +152,10 @@ export default class SuratMasuksController {
                 query.select('id', 'status')
             })
             .where('surat', params.id).orderBy('created_at', 'asc')
+
+        const catatan = track_surats
+            .filter((item: any) => [1, 5, 6, 7, 8].includes(item.status))
+            .map((item: any) => item)
 
         const unit_lain = await Unit.query()
             .whereNot('id', user.penugasans[0].jabatanRel.unit)
@@ -153,11 +170,11 @@ export default class SuratMasuksController {
                     })
             })
             .orderBy('id', 'asc')
-        const tree = await UnitTreeService.getTree(user.penugasans[0].jabatanRel.unit)
-        const unit_bawahan = await Unit.query().whereIn('id', tree).andWhereNot('id', user.penugasans[0].jabatanRel.unit).orderBy('id', 'asc')
+        // const tree = await UnitTreeService.getTree(user.penugasans[0].jabatanRel.unit)
+        // const unit_bawahan = await Unit.query().whereIn('id', tree).andWhereNot('id', user.penugasans[0].jabatanRel.unit).orderBy('id', 'asc')
 
-        const units = unit_lain.concat(unit_bawahan)
-        console.log(unit_bawahan)
+        const units = unit_lain
+        // console.log(unit_bawahan)
 
         const anggotas = await Jabatan.query()
             .preload('penugasans', (query) => {
@@ -165,9 +182,11 @@ export default class SuratMasuksController {
                     .preload('pejabatRel', (query) => {
                         query.select('username', 'nama')
                     }).where('status', 'aktif')
-            }).whereIn('jabatans.unit', tree).andWhereIn('jabatans.role', [4, 5])
+            })
+            // .whereIn('jabatans.unit', tree)
+            .andWhereIn('jabatans.role', [4, 5])
 
-        return view.render('pages/surat/surat_masuks_detail', { surat, track_surats, updateSurat, status, units, anggotas })
+        return view.render('pages/surat/surat_masuks_detail', { surat, track_surats, catatan, updateSurat, status, units, anggotas })
     }
 
     async put({ request, response, session, params }: any) {

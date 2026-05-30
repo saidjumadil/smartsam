@@ -156,7 +156,45 @@
             </div>
 
             {{-- Riwayat --}}
-            <div class="col-span-2">
+            <div class="col-span-2 flex flex-col gap-4">
+                <div class="kt-card">
+                    <div class="kt-card-header">
+                        <h3 class="kt-card-title">
+                            Catatan Pengirim
+                        </h3>
+                    </div>
+                    <div class="kt-card-content pb-7">
+                        <div class="flex flex-col gap-5">
+                            @let(catatanAkhir = catatan[catatan.length - 1])
+                            <div class="kt-card border-s-2 border-{{tipeStatus(catatanAkhir.status)}}">
+                                <div class="kt-card-content space-y-4">
+                                    <div>
+                                        <h3 class="text-sm font-semibold text-primary">
+                                            Pengirim
+                                        </h3>
+                                        <h3 class="text-sm font-semibold text-foreground">
+                                            {{catatanAkhir.dariRel.pejabatRel.nama}}
+                                        </h3>
+                                        <p class="text-[10px] text-gray-500 ">
+                                            {{catatanAkhir.dariRel.jabatanRel.nama}}
+                                        </p>
+                                        <div class="rounded-lg bg-{{tipeStatus(catatanAkhir.status)}} p-2 mt-2">
+                                            <p class=" text-sm text-white">
+                                                {{catatanAkhir.catatan ? catatanAkhir.catatan : '-'}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between text-sm">
+                                        <span class="text-muted-foreground">{{date(new
+                                            Date(catatanAkhir.createdAt))}}</span><span
+                                            class="font-medium text-foreground">{{time(new
+                                            Date(catatanAkhir.createdAt))}} WIB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="kt-card">
                     <div class="kt-card-header">
                         <h3 class="kt-card-title">
@@ -164,27 +202,174 @@
                         </h3>
                     </div>
                     <div class="kt-card-content pb-7">
-                        <div class="flex flex-col gap-5">
-                            @each(item in track_surats)
-                            <div class="border-s-2 border-{{tipeStatus(item.status)}}">
-                                <div class=" gap-3 ps-3 mb-0.5">
-                                    <span class="kt-badge kt-badge-{{tipeStatus(item.status)}} mb-2">
-                                        {{item.statusSuratRel.status}}
-                                    </span>
-                                    <div class="flex gap-1 items-center">
-                                        <span class="text-xs text-secondary-foreground flex flex-row gap-1">
-                                            {{date(new Date(item.createdAt))}} - {{time(new Date(item.createdAt))}} WIB
+                        @let(now = track_surats[track_surats.length - 1])
+                        <div class="kt-card border-s-2 border-{{tipeStatus(now.status)}}">
+                            <div class="kt-card-content space-y-4">
+                                <div>
+                                    <div class="flex justify-between">
+                                        <span class="kt-badge kt-badge-{{tipeStatus(now.status)}} mb-2">
+                                            {{now.statusSuratRel.status}}
                                         </span>
                                     </div>
+                                    <div class="grid grid-cols-1 gap-4 mt-2">
+                                        @if(now.dariRel.id == now.kepadaRel.id)
+                                        <div class="col-span-2">
+                                            <h3 class=" font-semibold ">
+                                                {{now.dariRel.pejabatRel.nama}}
+                                            </h3>
+                                            <span class="text-xs text-secondary-foreground">Jabatan
+                                                :
+                                                {{now.dariRel.jabatanRel.nama}}
+                                            </span>
+                                            <p class="text-xs text-secondary-foreground">Unit :
+                                                {{now.dariRel.jabatanRel.unitRel.nama}}
+                                            </p>
+                                        </div>
+                                        @else
+                                        <div class="">
+                                            <p class="text-sm font-medium text-muted-foreground">
+                                                Dari : </p>
+                                            <h3 class=" font-semibold ">
+                                                {{now.dariRel.pejabatRel.nama}}
+                                            </h3>
+                                            <span class="text-xs text-secondary-foreground">Jabatan
+                                                :
+                                                {{now.dariRel.jabatanRel.nama}}
+                                            </span>
+                                            <p class="text-xs text-secondary-foreground">Unit :
+                                                {{now.dariRel.jabatanRel.unitRel.nama}}
+                                            </p>
+                                        </div>
+                                        <div class="">
+                                            <p class="text-sm font-medium text-muted-foreground">
+                                                Kepada : </p>
+                                            <h3 class=" font-semibold ">
+                                                {{now.kepadaRel.pejabatRel.nama}}
+                                            </h3>
+                                            <span class="text-xs text-secondary-foreground">Jabatan
+                                                :
+                                                {{now.kepadaRel.jabatanRel.nama}}
+                                            </span>
+                                            <p class="text-xs text-secondary-foreground">Unit :
+                                                {{now.kepadaRel.jabatanRel.unitRel.nama}}
+                                            </p>
+                                        </div>
+                                        @end
+                                    </div>
+                                    <div class="rounded-lg bg-blue-50 w-full grow p-3 mt-3">
+                                        <h3 class="text-sm font-bold">CATATAN</h3>
+                                        <p class="mt-1  ">
+                                            {{now.catatan ? now.catatan : '-'}}
+                                        </p>
+                                    </div>
                                 </div>
-                                <p class="text-sm text-secondary-foreground leading-5.5 ps-3 mt-2">
-                                    Catatan :
-                                </p>
-                                <p class="text-xs text-foreground leading-5.5 ps-3">
-                                    {{item.catatan ? item.catatan : '-'}}
-                                </p>
+                                <div class="flex items-center justify-between text-sm">
+                                    <span class="text-muted-foreground">{{date(new
+                                        Date(now.createdAt))}}</span><span
+                                        class="font-medium text-foreground">{{time(new
+                                        Date(now.createdAt))}} WIB</span>
+                                </div>
                             </div>
-                            @end
+                        </div>
+                        <div class="flex justify-center mt-3">
+                            <button class="kt-btn  kt-btn-primary w-full"
+                                data-kt-modal-toggle="#riwayatModal">Selengkapnya</button>
+                            <div class="kt-modal kt-modal-center" data-kt-modal="true" id="riwayatModal">
+                                <div class="kt-modal-content max-w-[600px] max-h-[95%]">
+                                    <div class="kt-modal-header">
+                                        <h3 class="kt-modal-title">Riwayat Surat</h3>
+                                        <button type="button" class="kt-modal-close" aria-label="Close modal"
+                                            data-kt-modal-dismiss="#riwayatModal">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"
+                                                aria-hidden="true">
+                                                <path d="M18 6 6 18"></path>
+                                                <path d="m6 6 12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="kt-modal-body kt-scrollable overflow-auto ">
+                                        <div class="flex flex-col gap-5">
+                                            @each((item, index) in track_surats)
+                                            <div class="kt-card border-s-2 border-{{tipeStatus(item.status)}}">
+                                                <div class="kt-card-content space-y-4">
+                                                    <div>
+                                                        <div class="flex justify-between">
+                                                            <span
+                                                                class="kt-badge kt-badge-{{tipeStatus(item.status)}} mb-2">
+                                                                {{item.statusSuratRel.status}}
+                                                            </span>
+                                                            <h3
+                                                                class="text-lg font-bold text-foreground text-{{tipeStatus(item.status)}}">
+                                                                {{index+1}}
+                                                            </h3>
+                                                        </div>
+                                                        <div class="grid grid-cols-2 gap-4 mt-3">
+                                                            @if(item.dariRel.id == item.kepadaRel.id)
+                                                            <div class="col-span-2">
+                                                                <h3 class=" font-semibold ">
+                                                                    {{item.dariRel.pejabatRel.nama}}
+                                                                </h3>
+                                                                <span class="text-xs text-secondary-foreground">Jabatan
+                                                                    :
+                                                                    {{item.dariRel.jabatanRel.nama}}
+                                                                </span>
+                                                                <p class="text-xs text-secondary-foreground">Unit :
+                                                                    {{item.dariRel.jabatanRel.unitRel.nama}}
+                                                                </p>
+                                                            </div>
+                                                            @else
+                                                            <div class="">
+                                                                <p class="text-sm font-medium text-muted-foreground">
+                                                                    Dari : </p>
+                                                                <h3 class=" font-semibold ">
+                                                                    {{item.dariRel.pejabatRel.nama}}
+                                                                </h3>
+                                                                <span class="text-xs text-secondary-foreground">Jabatan
+                                                                    :
+                                                                    {{item.dariRel.jabatanRel.nama}}
+                                                                </span>
+                                                                <p class="text-xs text-secondary-foreground">Unit :
+                                                                    {{item.dariRel.jabatanRel.unitRel.nama}}
+                                                                </p>
+                                                            </div>
+                                                            <div class="">
+                                                                <p class="text-sm font-medium text-muted-foreground">
+                                                                    Kepada : </p>
+                                                                <h3 class=" font-semibold ">
+                                                                    {{item.kepadaRel.pejabatRel.nama}}
+                                                                </h3>
+                                                                <span class="text-xs text-secondary-foreground">Jabatan
+                                                                    :
+                                                                    {{item.kepadaRel.jabatanRel.nama}}
+                                                                </span>
+                                                                <p class="text-xs text-secondary-foreground">Unit :
+                                                                    {{item.kepadaRel.jabatanRel.unitRel.nama}}
+                                                                </p>
+                                                            </div>
+                                                            @end
+                                                        </div>
+                                                        <div class="rounded-lg bg-blue-50 w-full grow p-3 mt-3">
+                                                            <h3 class="text-sm font-bold">CATATAN</h3>
+                                                            <p class="mt-1  ">
+                                                                {{item.catatan ? item.catatan : '-'}}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex items-center justify-between text-sm">
+                                                        <span class="text-muted-foreground">{{date(new
+                                                            Date(item.createdAt))}}</span><span
+                                                            class="font-medium text-foreground">{{time(new
+                                                            Date(item.createdAt))}} WIB</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @end
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

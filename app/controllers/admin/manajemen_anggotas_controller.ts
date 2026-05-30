@@ -7,7 +7,7 @@ import User from "#models/user"
 export default class ManajemenAnggotasController {
     async index({ view, session, response }: any) {
         const user = session.get('user')
-        if (user.penugasans[0].jabatanRel.role == 1) {
+        if ([1, 2].includes(user.penugasans[0].jabatanRel.role)) {
             const units = await Unit.query().orderBy('id', 'asc')
             return view.render('pages/admin/manajemen_anggotas', { units })
         } else {
