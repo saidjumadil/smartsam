@@ -56,6 +56,11 @@
                                         required />
                                 </div>
                                 <div class="flex flex-row gap-2 mb-3">
+                                    <label for="" class="kt-label w-[100px]">Asal Surat</label>
+                                    <input type="text" name="asal_surat" class="kt-input"
+                                        placeholder="Asal surat jika bukan dari internal" />
+                                </div>
+                                <div class="flex flex-row gap-2 mb-3">
                                     <label for="" class="kt-label w-[100px]">Unit Penerima</label>
                                     <select class="kt-select" data-kt-select="true" data-kt-select-enable-search="true"
                                         name="unit" data-kt-select-search-placeholder="Search..."
@@ -223,7 +228,7 @@
                                         <th>
                                             <span class="kt-table-col">
                                                 <span class="kt-table-col-label">
-                                                    Perihal
+                                                    Jenis Surat
                                                 </span>
                                                 <span class="kt-table-col-sort">
                                                 </span>
@@ -232,16 +237,7 @@
                                         <th>
                                             <span class="kt-table-col">
                                                 <span class="kt-table-col-label">
-                                                    Unit Pengirim
-                                                </span>
-                                                <span class="kt-table-col-sort">
-                                                </span>
-                                            </span>
-                                        </th>
-                                        <th>
-                                            <span class="kt-table-col">
-                                                <span class="kt-table-col-label">
-                                                    Tujuan Surat
+                                                    Asal Surat
                                                 </span>
                                                 <span class="kt-table-col-sort">
                                                 </span>
@@ -272,33 +268,20 @@
                                 <tbody>
                                     @each((item, index) in surats)
                                     <tr>
-                                        <td class="text-center">
+                                        <td class="text-center font-bold">
                                             {{index + 1}}
                                         </td>
-                                        <td class="text-foreground font-normal">
+                                        <td class="text-foreground font-bold">
                                             {{item.nomor_surat}}
                                         </td>
-                                        <td class="text-foreground font-normal">
+                                        <td class="text-foreground font-bold">
                                             {{item.jenisSuratRel.jenis}}
                                         </td>
                                         <td class="text-foreground font-normal">
+                                            {{item.asal_surat ? item.asal_surat : 'Internal'}}
+                                        </td>
+                                        <td class="text-foreground font-normal">
                                             {{item.perihal}}
-                                        </td>
-                                        <td>
-                                            <p class="text-foreground font-normal">
-                                                {{item.pengirimRel.pejabatRel.nama}}
-                                            </p>
-                                            <span class="text-xs">
-                                                {{item.pengirimRel.jabatanRel.unitRel.nama}}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <p class="text-foreground font-normal">
-                                                {{item.penerimaRel.pejabatRel.nama}}
-                                            </p>
-                                            <span class="text-xs">
-                                                {{item.penerimaRel.jabatanRel.unitRel.nama}}
-                                            </span>
                                         </td>
                                         <td class="text-foreground font-normal">
                                             {{date(item.tanggal_surat)}}

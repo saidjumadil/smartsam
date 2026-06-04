@@ -35,7 +35,7 @@ export default class extends BaseSeeder {
         case '19':
           unitAdmin["superAdmin"] = addUnit.id
           break;
-        case '15':
+        case '10':
           unitAdmin["adminUmum"] = addUnit.id
           break;
         default:

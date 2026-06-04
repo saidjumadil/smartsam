@@ -125,10 +125,20 @@
                                                         data-kt-select-enable-search="true" name="unit" id="unit"
                                                         data-kt-select-search-placeholder="Search..."
                                                         data-kt-select-placeholder="Pilih Unit Penerima"
-                                                        data-kt-select-config='{"optionsClass": "kt-scrollable overflow-auto max-h-[250px]"}'
-                                                        required>
+                                                        data-kt-select-config='{
+                                                        "optionsClass": "kt-scrollable overflow-auto max-h-[250px]", 
+                                                        "optionTemplate": "&lt;div class=\"flex items-center grow gap-2\"&gt;&lt;div class=\"flex flex-col gap-0.5\"&gt;&lt;span class=\"font-semibold text-foreground\"&gt;@{{text}}&lt;/span&gt;&lt;span class=\"text-xs text-muted-foreground\"&gt;@{{desc}}&lt;/span&gt;&lt;/div&gt;&lt;svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"size-3.5 ms-auto hidden text-primary kt-select-option-selected:block\"&gt;&lt;path d=\"M20 6 9 17l-5-5\"/&gt;&lt;/svg&gt;&lt;/div&gt;"
+                                                        }' required>
                                                         @each(item in units)
-                                                        <option value="{{item.id}}">{{item.jenis}} | {{item.nama}}
+                                                        @let(pimpinan = item.jabatans.length > 0 &&
+                                                        item.jabatans[0].penugasans.length > 0 ?
+                                                        "Pimpinan : " + item.jabatans[0].penugasans[0].pejabatRel.nama :
+                                                        "Tidak Ada Pimpinan"
+                                                        )
+                                                        <option value="{{item.id}}"
+                                                            data-search="{{item.nama}} {{pimpinan}}"
+                                                            data-kt-select-option='{"desc": "Jenis Unit : {{item.jenis}}"}'>
+                                                            {{item.nama}} | {{pimpinan}}
                                                         </option>
                                                         @end
                                                     </select>
@@ -223,7 +233,7 @@
                                         {{surat.perihal}}
                                     </span>
                                 </div>
-                                <div class="grid grid-cols-3 gap-1.5">
+                                <div class="grid grid-cols-2 gap-1.5">
                                     <div class="flex flex-col gap-1.5">
                                         <span class="text-sm text-muted-foreground">
                                             Tanggal Surat
@@ -238,6 +248,14 @@
                                         </span>
                                         <span class="text-sm text-foreground">
                                             {{surat.jenisSuratRel.jenis}}
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col gap-1.5">
+                                        <span class="text-sm text-muted-foreground">
+                                            Asal Surat
+                                        </span>
+                                        <span class="text-sm text-foreground">
+                                            {{surat.asal_surat ? surat.asal_surat : 'Internal'}}
                                         </span>
                                     </div>
                                     <div class="flex flex-col gap-1.5">

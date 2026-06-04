@@ -103,6 +103,7 @@ export default class SuratKeluarsController {
             pejabat_penerima: pejabat?.penugasans[0].id,
             pejabat_pengirim: user.penugasans[0].id,
             tanggal_surat: post.tanggal_surat,
+            asal_surat: post.asal_surat,
             status: post.pimpinan == 'on' ? 3 : 1,
             file: fileName
         })

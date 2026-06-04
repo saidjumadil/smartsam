@@ -80,7 +80,7 @@
                             <table class="kt-table table-auto kt-table-border" data-kt-datatable-table="true">
                                 <thead>
                                     <tr>
-                                        <th class="w-[60px] text-center">
+                                        <th class="w-[40px] text-center">
                                             <span class="kt-table-col">
                                                 <span class="kt-table-col-label">
                                                     No.
@@ -110,6 +110,15 @@
                                         <th>
                                             <span class="kt-table-col">
                                                 <span class="kt-table-col-label">
+                                                    Asal Surat
+                                                </span>
+                                                <span class="kt-table-col-sort">
+                                                </span>
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="kt-table-col">
+                                                <span class="kt-table-col-label">
                                                     Perihal
                                                 </span>
                                                 <span class="kt-table-col-sort">
@@ -128,25 +137,7 @@
                                         <th>
                                             <span class="kt-table-col">
                                                 <span class="kt-table-col-label">
-                                                    Tujuan Surat
-                                                </span>
-                                                <span class="kt-table-col-sort">
-                                                </span>
-                                            </span>
-                                        </th>
-                                        <th>
-                                            <span class="kt-table-col">
-                                                <span class="kt-table-col-label">
                                                     Tanggal Surat
-                                                </span>
-                                                <span class="kt-table-col-sort">
-                                                </span>
-                                            </span>
-                                        </th>
-                                        <th>
-                                            <span class="kt-table-col">
-                                                <span class="kt-table-col-label">
-                                                    Status Surat
                                                 </span>
                                                 <span class="kt-table-col-sort">
                                                 </span>
@@ -160,14 +151,17 @@
                                     @each((item, index) in surats)
                                     <tr
                                         class="{{session.get('user.penugasans[0].id') == item.pejabat_penerima ? 'bg-blue-100' : ''}}">
-                                        <td class="text-center">
+                                        <td class="text-center font-bold">
                                             {{index + 1}}
                                         </td>
-                                        <td class="text-foreground font-normal">
+                                        <td class="text-foreground font-bold">
                                             {{item.nomor_surat}}
                                         </td>
-                                        <td class="text-foreground font-normal">
+                                        <td class="text-foreground font-bold">
                                             {{item.jenisSuratRel.jenis}}
+                                        </td>
+                                        <td class="text-foreground font-normal">
+                                            {{item.asal_surat ? item.asal_surat : 'Internal'}}
                                         </td>
                                         <td class="text-foreground font-normal">
                                             {{item.perihal}}
@@ -180,18 +174,10 @@
                                                 {{item.pengirimRel.jabatanRel.unitRel.nama}}
                                             </span>
                                         </td>
-                                        <td>
-                                            <p class="text-foreground font-normal">
-                                                {{item.penerimaRel.pejabatRel.nama}}
-                                            </p>
-                                            <span class="text-xs">
-                                                {{item.penerimaRel.jabatanRel.unitRel.nama}}
-                                            </span>
-                                        </td>
                                         <td class="text-foreground font-normal">
                                             {{date(item.tanggal_surat)}}
                                         </td>
-                                        <td class="text-foreground font-normal">
+                                        {{-- <td class="text-foreground font-normal">
                                             <div class="kt-table-cell-toolbar flex flex-row gap-3 justify-center">
                                                 @if(item.status == 5)
                                                 <span
@@ -204,7 +190,7 @@
                                                     class="kt-badge kt-badge-light kt-badge-primary">{{item.statusSuratRel.status}}</span>
                                                 @end
                                             </div>
-                                        </td>
+                                        </td> --}}
                                         <td class="text-center">
                                             <div class="kt-table-cell-toolbar flex flex-row gap-3 justify-center">
                                                 <a href="{{route('surat.surat_masuk.detail', {id: item.id})}}"

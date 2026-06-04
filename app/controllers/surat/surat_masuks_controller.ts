@@ -6,7 +6,7 @@ import Penugasan from "#models/penugasan"
 import Surat from "#models/surat"
 import TrackSurat from "#models/track_surat"
 import Unit from "#models/unit"
-// import UnitTreeService from "#services/UnitTreeService"
+import UnitTreeService from "#services/UnitTreeService"
 
 export default class SuratMasuksController {
     async index({ view, session }: any) {
@@ -170,10 +170,23 @@ export default class SuratMasuksController {
                     })
             })
             .orderBy('id', 'asc')
-        // const tree = await UnitTreeService.getTree(user.penugasans[0].jabatanRel.unit)
-        // const unit_bawahan = await Unit.query().whereIn('id', tree).andWhereNot('id', user.penugasans[0].jabatanRel.unit).orderBy('id', 'asc')
+        const tree = await UnitTreeService.getTree(user.penugasans[0].jabatanRel.unit)
+        const unit_bawahan = await Unit.query()
+            .whereIn('id', tree)
+            .andWhereNot('id', user.penugasans[0].jabatanRel.unit)
+            .preload('jabatans', (query) => {
+                query.select('id', 'unit', 'role').where('role', 3)
+                    .preload('penugasans', (query) => {
+                        query.select('jabatan', 'pejabat').where('status', 'aktif')
+                            .preload('pejabatRel', (query) => {
+                                query.select('username', 'nama')
+                            })
+                    })
+            })
+            .orderBy('id', 'asc')
 
-        const units = unit_lain
+        const units = unit_lain.concat(unit_bawahan)
+            .filter((unit, index, self) => index === self.findIndex((item) => item.id === unit.id))
         // console.log(unit_bawahan)
 
         const anggotas = await Jabatan.query()
@@ -183,7 +196,7 @@ export default class SuratMasuksController {
                         query.select('username', 'nama')
                     }).where('status', 'aktif')
             })
-            // .whereIn('jabatans.unit', tree)
+            .whereIn('jabatans.unit', tree)
             .andWhereIn('jabatans.role', [4, 5])
 
         return view.render('pages/surat/surat_masuks_detail', { surat, track_surats, catatan, updateSurat, status, units, anggotas })
@@ -267,7 +280,7 @@ export default class SuratMasuksController {
                 })
                 await Surat.query().where('id', params.id).update({ status: post.status, pejabat_penerima: surat?.pejabat_pengirim })
 
-                session.flash('alert', { type: 'success', msg: 'Surat Berhasil ' + (post.status == 5 ? 'Ditolak' : 'Diterima') })
+                session.flash('alert', { type: 'success', msg: 'Surat Berhasil ' + (post.status == 6 ? 'Ditolak' : 'Diterima') })
                 return response.redirect().toRoute('surat.surat_masuk.index')
         }
     }

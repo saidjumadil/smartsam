@@ -16,6 +16,7 @@ export default class extends BaseSchema {
       table.text('file').notNullable()
       table.boolean('langsung_pimpinan').defaultTo(false)
       table.boolean('arsipkan').defaultTo(false)
+      table.text('asal_surat')
 
       table.timestamp('created_at')
       table.timestamp('updated_at')

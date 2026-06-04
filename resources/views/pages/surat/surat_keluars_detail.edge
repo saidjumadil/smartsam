@@ -60,7 +60,7 @@
                                         {{surat.perihal}}
                                     </span>
                                 </div>
-                                <div class="grid grid-cols-3 gap-1.5">
+                                <div class="grid grid-cols-2 gap-1.5">
                                     <div class="flex flex-col gap-1.5">
                                         <span class="text-sm text-muted-foreground">
                                             Tanggal Surat
@@ -75,6 +75,14 @@
                                         </span>
                                         <span class="text-sm text-foreground">
                                             {{surat.jenisSuratRel.jenis}}
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col gap-1.5">
+                                        <span class="text-sm text-muted-foreground">
+                                            Asal Surat
+                                        </span>
+                                        <span class="text-sm text-foreground">
+                                            {{surat.asal_surat ? surat.asal_surat : 'Internal'}}
                                         </span>
                                     </div>
                                     <div class="flex flex-col gap-1.5">

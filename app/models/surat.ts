@@ -44,6 +44,9 @@ export default class Surat extends BaseModel {
   @column()
   declare arsipkan: boolean
 
+  @column()
+  declare asal_surat: string
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
