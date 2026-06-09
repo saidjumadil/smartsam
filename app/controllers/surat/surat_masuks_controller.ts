@@ -197,7 +197,7 @@ export default class SuratMasuksController {
                     }).where('status', 'aktif')
             })
             .whereIn('jabatans.unit', tree)
-            .andWhereIn('jabatans.role', [4, 5])
+            .andWhereIn('jabatans.role', [4, 5, 2])
 
         return view.render('pages/surat/surat_masuks_detail', { surat, track_surats, catatan, updateSurat, status, units, anggotas })
     }
