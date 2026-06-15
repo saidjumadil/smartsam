@@ -75,6 +75,7 @@ export default class SuratMasuksController {
             case 3:
                 status = 4;
                 break;
+            case 2:
             case 5:
                 status = 9;
                 break;
