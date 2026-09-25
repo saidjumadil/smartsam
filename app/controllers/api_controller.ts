@@ -3,13 +3,15 @@
 import Partisipan from "#models/partisipan"
 import Penugasan from "#models/penugasan"
 import Surat from "#models/surat"
+import TrackSurat from "#models/track_surat"
+import app from "@adonisjs/core/services/app"
 
 export default class ApiController {
     async notifSuratMasuk({ params }: any) {
-        const penugasans = await Penugasan.query().select('id', 'pejabat').where('pejabat', params.id)
-        const pejabatId = penugasans.map((penugasan: any) => penugasan.id)
+        const penugasans = await Penugasan.query().select('id', 'pejabat').where('pejabat', params.id).firstOrFail()
 
-        const riwayats = await Surat.query().select('id').whereIn('pejabat_penerima', pejabatId).andWhere('arsipkan', false).andWhereNotIn('status', [5, 6])
+        const riwayats = await Surat.query().select('id').where('pejabat_penerima', penugasans?.id).andWhere('arsipkan', false).andWhereNotIn('status', [5, 6])
+        console.log(riwayats.length)
         return riwayats.length
     }
 
@@ -23,5 +25,24 @@ export default class ApiController {
             .where('partisipans.user', params.id)
         const dibaca = partisipan.reduce((sum, pesan) => sum + (pesan.$extras.pesan === null ? 1 : 0), 0)
         return dibaca
+    }
+
+    async getSurat({ params, session, response }: any) {
+        const user = session.get('user')
+        console.log(user)
+        const surats: any = TrackSurat.query().select('surat', 'dari', 'kepada')
+            .where('dari', user.penugasans[0].id)
+            .orWhere('kepada', user.penugasans[0].id)
+            .andWhere('id', params.id)
+            .preload('suratRel', (query) => {
+                query.select('file')
+            })
+            .first()
+
+        if (surats) {
+            return response.redirect(app.tmpPath(`uploads/surat/${surats.surat}/${surats.suratRel.file}`))
+        } else {
+            return "Anda Tidak Memiliki Akses Surat Ini"
+        }
     }
 }

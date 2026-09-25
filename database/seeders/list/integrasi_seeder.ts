@@ -396,7 +396,12 @@ export default class extends BaseSeeder {
       const jabatan = item.id_jabatan == null ? false : await Jabatan.findBy('id_pusat', item.id_jabatan)
 
 
+
       if (item.id_jabatan != null && jabatan) { //jika ada jabatan struktural, langsung direlasikan
+        if (user && user.username == '197906262015041001') {
+          console.log("Memproses pejabat", item.nama_lengkap)
+          console.log(user.username, jabatan, item.id_jabatan)
+        }
         try {
           // console.log("Memproses pejabat", item.nama_lengkap)
           // console.log(user.username, jabatan?.id, item.id_jabatan)

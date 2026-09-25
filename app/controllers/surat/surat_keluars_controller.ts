@@ -9,6 +9,7 @@ import TrackSurat from "#models/track_surat"
 import Unit from "#models/unit"
 import app from "@adonisjs/core/services/app"
 
+
 export default class SuratKeluarsController {
 
     async index({ view, session }: any) {
@@ -84,18 +85,25 @@ export default class SuratKeluarsController {
                 query.select('id', 'nama')
             })
             .first()
-        console.log(pejabat)
 
-        const file = request.file('file')
+        const file = request.file('file', {
+            types: ['pdf'],
+            size: '10mb',
+            extnames: ['pdf']
+        })
+
+        if (!file.isValid) {
+            session.flash('alert', { type: 'destructive', msg: 'File harus berupa PDF dan size maksimal 10MB' })
+            return response.redirect().back()
+        }
 
         if (pejabat?.penugasans.length == 0 || pejabat == null) {
-            // console.log('Pejabat tidak tersedia')
             const pejabat = post.pimpinan == 'on' ? 'Pimpinan Belum Terdaftar, Silahkan Hubungi Admin' : 'Admin Surat Belum ditentukan, Silahkan mengirim langsung ke Pimpinan Unit Atau Hubungi Unit Tersebut'
             session.flash('alert', { type: 'destructive', msg: pejabat })
             return response.redirect().back()
         }
 
-        const fileName = post.nomor_surat + '.' + file.extname
+        const fileName = `${new Date().getTime()}_${crypto.randomUUID()}.${file.extname}`
         const add = await Surat.create({
             nomor_surat: post.nomor_surat,
             jenis_surat: post.jenis_surat,
@@ -133,11 +141,19 @@ export default class SuratKeluarsController {
         }
 
         if (add) {
-            const lampirans = request.files('lampiran')
+            const lampirans = request.files('lampiran', {
+                size: '10mb',
+                extnames: ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'xls', 'xlsx', 'ppt', 'pptx']
+            })
             // return lampirans
             if (lampirans.length > 0) {
                 for (const index in lampirans) {
-                    const fileName = 'Lampiran_' + '_' + (parseInt(index) + 1) + '_' + post.nomor_surat + '_' + lampirans[index].clientName
+                    if (!lampirans[index].isValid) {
+                        await add.delete()
+                        session.flash('alert', { type: 'destructive', msg: 'File lampiran yang anda upload tidak sesuai dengan format yang diizinkan' })
+                        return response.redirect().back()
+                    }
+                    const fileName = 'Lampiran_' + crypto.randomUUID() + `.${lampirans[index].extname}`
                     await lampirans[index].move(app.tmpPath(`uploads/surat/${add.id}`), {
                         name: fileName,
                         overwrite: true

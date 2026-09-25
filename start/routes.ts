@@ -104,6 +104,8 @@ router.group(() => {
         router.post('/:id', '#controllers/pesans_controller.balas').as('balas')
     }).prefix('pesan').as('pesan')
 
+    router.get('get-surat/:id', '#controllers/api_controller.getSurat').as('getSurat')
+
 }).use(middleware.auth())
 
 router.get('/api/notif-surat-masuk/:id', '#controllers/api_controller.notifSuratMasuk').as('notifSuratMasuk')

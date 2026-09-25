@@ -204,11 +204,11 @@
                     <div class="kt-card-content mb-4">
                         <div class="flex flex-row gap-2">
                             <div class="min-w-[350px] flex items-center justify-center">
-                                <a href="{{appUrl(`tmp/uploads/surat/${surat.id}/${surat.file}`)}}"
+                                <a href="{{ route('getSurat', { id : surat.id }) }}"
                                     class="flex flex-col items-center gap-2" target="_blank" rel="noopener noreferrer">
                                     <img src="assets/media/file-types/pdf.svg" class="min-w-[140px]">
                                     <span class="text-center text-lg font-semibold text-muted-foreground">
-                                        {{truncateString(surat.file, 18)}}
+                                        {{truncateString(surat.nomor_surat, 18)}}
                                     </span>
                                 </a>
                             </div>
@@ -318,7 +318,7 @@
                                     <div class="flex flex-col">
                                         <span
                                             class="text-sm font-medium text-mono cursor-pointer hover:text-primary mb-px">
-                                            {{item.source}}
+                                            Lampiran Surat {{surat.nomor_surat}} {{item.index + 1}}
                                         </span>
                                         <span class="text-xs text-secondary-foreground">
                                             Tipe File : {{tipe[item.tipe]}}

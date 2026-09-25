@@ -11,7 +11,8 @@
     "test": "node ace test",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "update": "node ace db:seed --files='database/seeders/main_seeder.js'"
   },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",

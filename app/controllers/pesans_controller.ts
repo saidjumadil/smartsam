@@ -58,16 +58,23 @@ export default class PesansController {
         if (conversation) {
             const pesan = await Pesan.create({ conversation: conversation.id, pengirim: user.id, isi: post.isi })
             if (pesan) {
-                const lampirans = request.files('lampiran')
+                const lampirans = request.files('lampiran', {
+                    size: '10mb',
+                    extnames: ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'xls', 'xlsx', 'ppt', 'pptx']
+                })
                 if (lampirans.length > 0) {
                     for (const lampiran of lampirans) {
-                        console.log(lampiran)
+                        if (!lampiran.isValid) {
+                            session.flash('alert', { type: 'destructive', message: 'File tidak sesuai dengan format yang diizinkan. Silahkan cek file yang anda upload.' })
+                        }
+                        const fileName = `${crypto.randomUUID()}.${lampiran.clientName}`
                         await lampiran.move(app.tmpPath(`uploads/pesan/conversation/${conversation.id}/pesan/${pesan.id}`), {
+                            name: fileName,
                             overwrite: true
                         })
                         await LampiranPesan.create({
                             pesan: pesan.id,
-                            file: lampiran.clientName,
+                            file: fileName,
                         })
                     }
                 }
